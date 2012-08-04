@@ -118,14 +118,14 @@
 	  </article>
       <article>
 		<p>と言っていたら showyouさんのお陰で実現 (2012.5)</p>
-		<p>幹事業務も有志の皆さんが快く引き受けて下さいました</p>
+		<p>幹事業務も有志の皆さんが快く引き受けて下さいました：</p>
 		<table>
-		  <tr><td>司会進行</td> <td>sleepy_yoshiさん</td></tr>
-		  <tr><td>会場</td> <td>showyouさん</td></tr>
+		  <tr><td>司会進行（＆アイスブレイク）</td> <td>sleepy_yoshiさん</td></tr>
+		  <tr><td>会場（＆じゃんけん）</td> <td>showyouさん</td></tr>
 		  <tr><td>出欠＆ATND</td> <td>Prunus1350さん</td></tr>
 		</table>
-		<p>（御礼）</p>
-		<p>今では最後列の席で絶賛<ruby>一般参加者<rt>ステルス</rt></ruby>しています。</p>
+		<p>（この場を借りて御礼）</p>
+		<p>お陰様で今では最後列の席で絶賛<ruby>一般参加者<rt>ステルス</rt></ruby>しています。</p>
 		<p>それにしても今回は最初からガチ勢しか来てない…</p>
 	  </article>
 
@@ -145,7 +145,8 @@
 			  ※"Ng"は[ŋ:] みたいな発音のようです。finger [fiŋgə:]のngじゃなくてsinger [siŋə:] のngで。</span>
 		  </li>
 		  </ul>
-		  が立ち上げた、Stanford他28大学の講義をオンラインで無料で提供するベンチャー企業。</p>
+		  が立ち上げた、Stanford他17大学116講義(※8/5現在)をオンラインで無料で提供するベンチャー企業。</p>
+		<p align="center"><a href="https://www.coursera.org/">https://www.coursera.org/</a></p>
 		<p>現時点では提供されている講義はCSを中心とした科学系が大半だが、今後人文系の講義も増やしていくとのこと。</p>
 	  </article>
 
@@ -252,11 +253,6 @@
       </article>
 
       <article>
-		<p>
-		</p>
-      </article>
-
-      <article>
         <h3>パーセプトロンの収束定理<br>
 		  <i>perceptron convergence theorem</i></h3>
 		<p>厳密解が存在する場合（＝学習データ集合が線形分離可能な場合）には、このアルゴリズムは有限回の繰り返しで厳密解に収束することが保証される。</p>
@@ -266,7 +262,6 @@
       <article>
         <h3>パーセプトロンの限界</h3>
 		<ul>
-		  <li>パラメータの初期値やデータ順によってさまざまな解に収束する</li>
 		  <li>確率的な出力を提供しない</li>
 		  <li>K > 2クラスの場合への一般化が容易ではない</li>
 		  <li><b>線形分離不可能なデータに対して収束しない</b><br>
@@ -353,10 +348,20 @@ end
 <!--
           There is more text just underneath with a <code>code sample: 5px</code>.
 -->
+      <article>
+        <h3>注意点</h3>
+		<ul>
+		  <li>この実装では誤分類サンプル数が 0 になるか、勾配降下を100ステップ行うかのどちらかで停止するようにしています</li>
+		  <li>パーセプトロン学習アルゴリズムの性質上、パラメータの初期値やデータ入力順によってさまざまな解に収束します</li>
+		  <li>紙面の都合により <code>plotData()</code> 関数に w = [0 0] 等を渡した場合のチェックを省いています。（完全なコードは発表資料と一緒に github に上げてあります）</li>
+		</ul>
+	  </article>
 
       <article>
-        <h3>おしまい</h3>
+        <h3>References</h3>
         <ul>
+		  <li>発表資料 + 実装コード (Octave) + サンプルデータ<br>
+		  <a href="https://github.com/naoyat/slides/tree/master/prml/4.1.7">https://github.com/naoyat/slides/tree/master/prml/4.1.7</a></li>
           <li>naoya_t@hatenablog<br>
 			<a href="http://naoyat.hatenablog.jp/">http://naoyat.hatenablog.jp/</a></li>
 		  <li>Google HTML5 slide template<br>
@@ -367,6 +372,8 @@ end
 			<a href="http://www.ted.com/talks/daphne_koller_what_we_re_learning_from_online_education.html">http://www.ted.com/talks/daphne_koller_what_we_re_learning_from_online_education.html</a></li>
         </ul>
       </article>
+
+      <article class='fill'><img src="images/keroro.jpg"></article>
 
     </section>
 
