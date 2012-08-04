@@ -16,8 +16,8 @@
   <head>
     <title>4.1.7 パーセプトロンアルゴリズム</title>
     <meta charset='utf-8'>
-    <script src='../slides.js'></script>
-    <link rel="stylesheet" type="text/css" href="../tstyles.css">
+    <script src='../../slides.js'></script>
+    <link rel="stylesheet" type="text/css" href="../../tstyles.css">
   </head>
   
   <style>
@@ -50,7 +50,7 @@
         <h3>自己紹介</h3>
         <ul>
 		  <li>naoya_t</li>
-		  <li><img src="chap04_1_7/keroro.jpg"></li>
+		  <li><img src="images/keroro.jpg"></li>
           <li>フリーエンジニア。＼機械学習始めました／</li>
 		  <li><del>2009年5月からPRML読書会を主催</del><br>
 			今は後ろのほうで一般参加者してます</li>
@@ -207,15 +207,15 @@
 
       <article>
         <h3>パーセプトロンの仕組み</h3>
-		<p>入力データ <img src="chap04_1_7/xn.png" valign="center">
+		<p>入力データ <img src="images/xn.png" valign="center">
 		  （に非線形変換
-		  <img src="chap04_1_7/phi.png" valign="center"> を適用した特徴量
-		  <img src="chap04_1_7/phi_xn.png" valign="top">）に対し、
-		  <img src="chap04_1_7/wT_phi_xn.png" valign="top"> の値が
+		  <img src="images/phi.png" valign="center"> を適用した特徴量
+		  <img src="images/phi_xn.png" valign="top">）に対し、
+		  <img src="images/wT_phi_xn.png" valign="top"> の値が
 		  クラスC<sub>1</sub>なら正、C<sub>2</sub> なら負になるような最適パラメータ
-		  <img src="chap04_1_7/w.png" valign="center"> を学習する。</p>
+		  <img src="images/w.png" valign="center"> を学習する。</p>
 		<p>誤分類されるパターンが多ければ大きく、少なければ 0 に近づくような誤差関数を設定し、
-		  確率的勾配降下法によって <img src="chap04_1_7/w.png" valign="center"> を求める。</p>
+		  確率的勾配降下法によって <img src="images/w.png" valign="center"> を求める。</p>
 		<!-- <p>計算の便宜上、目的変数の値として t_n ∈ { -1, +1 } </p>-->
       </article>
 <!--
@@ -228,18 +228,18 @@
         <h3>パーセプトロン規準<br>
 		<i>perceptron criterion</i></h3>
 		<p>誤識別したパターンの総数を誤差関数とすれば自然だが、
-		  誤差が <img src="chap04_1_7/w.png" valign="center"> の区分的な定数関数であり、
+		  誤差が <img src="images/w.png" valign="center"> の区分的な定数関数であり、
 		  勾配がほとんどの場合 0 となってしまうため勾配降下法が効かない。</p>
 		<p>そこで別の誤差関数を考える。</p>
-		<p>目標変数 <img src="chap04_1_7/t_n.png" valign="center"> の値を { -1, +1 } とすれば、
-		  <img src="chap04_1_7/wT_phi_xn_tn.png" valign="top"> は
+		<p>目標変数 <img src="images/t_n.png" valign="center"> の値を { -1, +1 } とすれば、
+		  <img src="images/wT_phi_xn_tn.png" valign="top"> は
 		  正しく分類される場合に正、誤分類なら負の値を取る。</p>
 		<p><!--正しく分類されたサンプルについては無視し、-->誤分類された全サンプル集合
-		  <img src="chap04_1_7/cal_M.png" valign="center"> に対し定義される
+		  <img src="images/cal_M.png" valign="center"> に対し定義される
 		  <blockquote>
-		  <img src="chap04_1_7/eq_4_54.png" valign="top">
+		  <img src="images/eq_4_54.png" valign="top">
 		  </blockquote>
-		  を<b>パーセプトロン規準</b>とし、これを最小化する <img src="chap04_1_7/w.png" valign="center"> を確率的勾配降下法で求める。
+		  を<b>パーセプトロン規準</b>とし、これを最小化する <img src="images/w.png" valign="center"> を確率的勾配降下法で求める。
 		</p>
       </article>
 
@@ -344,10 +344,10 @@ end
 </pre>
 	  </article>
 
-      <article class='fill'><img src="chap04_1_7/iter1.png"></article>
-      <article class='fill'><img src="chap04_1_7/iter2.png"></article>
-      <article class='fill'><img src="chap04_1_7/iter3.png"></article>
-      <article class='fill'><img src="chap04_1_7/iter4.png"></article>
+      <article class='fill'><img src="images/iter1.png"></article>
+      <article class='fill'><img src="images/iter2.png"></article>
+      <article class='fill'><img src="images/iter3.png"></article>
+      <article class='fill'><img src="images/iter4.png"></article>
 
 
 <!--
