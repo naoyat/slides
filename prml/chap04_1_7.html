@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<!--
+  Google HTML5 slide template
+
+  Authors: Luke Mahé (code)
+           Marcin Wichary (code and design)
+           
+           Dominic Mazzoni (browser compatibility)
+           Charles Chen (ChromeVox support)
+
+  URL: http://code.google.com/p/html5slides/
+-->
+
+<html>
+  <head>
+    <title>4.1.7 パーセプトロンアルゴリズム</title>
+    <meta charset='utf-8'>
+    <script src='../slides.js'></script>
+    <link rel="stylesheet" type="text/css" href="../tstyles.css">
+  </head>
+  
+  <style>
+    /* Your individual styles here, or just use inline styles if that’s
+       what you want. */
+  </style>
+
+  <body style='display: none'>
+
+    <section class='slides layout-regular template-default'>
+      
+<!--
+      <article class='biglogo'>
+      </article>
+-->
+      <article>
+        <h1 style=''>
+          <span style='font-size:40pt;'>パーセプトロンアルゴリズム</span>
+          <br>
+          <span style='font-size:32pt;'>4.1.7</span>
+        </h1>
+        <p>
+          naoya_t<br>
+          2012.8.5 PRML復々習レーン
+        </p>
+      </article>
+      
+
+      <article>
+        <h3>自己紹介</h3>
+        <ul>
+		  <li>naoya_t</li>
+		  <li><img src="chap04_1_7/keroro.jpg"></li>
+          <li>フリーエンジニア。＼機械学習始めました／</li>
+		  <li><del>2009年5月からPRML読書会を主催</del><br>
+			今は後ろのほうで一般参加者してます</li>
+        </ul>
+      </article>
+      <article>
+        <h3>自己紹介（続き）</h3>
+        <ul>
+          <li>最近面倒くさくて言ってないけど某国立大文学部卒<br>
+			当然ながらこの分野は元々素人</li>
+		  <li>競技プログラミングとか時々やってます</li>
+		  <li>Shibuya.lisp発起人の1人<br>
+			時々ネタでSchemeコード書いてます。Gauche大好き</li>
+		  <li>最近はCourseraのステマしてます<br>
+			７月から <i>"<a href="https://www.coursera.org/course/qcomp">Quantum Mechanics and Quantum Computation</a>"</i> のクラスに参加中</li>
+		  <li>週末に謎のお題付きカラオケ（機械学習、自然言語処理、コンパイラ実装、量子力学etc.）を開催しています</li>
+        </ul>
+      </article>
+
+      <article class='smaller'>
+        <h2>余談：PRML読書会小史</h2>
+		<p>
+		  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+		  時間遡行を何度繰り返してもワルプルムルの夜を倒せない…</p>
+      </article>
+
+
+      <article>
+        <h3>PRML読書会（本レーン）</h3>
+
+        <p>秋葉原の書泉ブックタワーでPRMLに一目惚れ。<br>
+		  面白そうな教科書だし<b>図版が綺麗だったので</b>衝動買い。</p>
+		<p>難しくて１人で読める気がしないので、当時住んでた墨田区の公民館で読書会を開いてみたのが第1回 (2009.5)。その後も公民館を転々としながら細々と開催。</p>
+		<p>万単位の戦闘力を持つガチ勢が次々到来。一方で初期の参加者は次々脱落。</p>
+		<p>トピックは追っているつもりだけれど、議論と数式展開がもはや地球人の肉眼では見えない…</p>
+		<p>PRML hackathonを2回開催（＠曳舟文化センター）</p>
+		<p>感動の<a href="http://atnd.org/events/6603">最終回</a>は参加者16名。<br>
+		  訳者の1人@shima__shimaさんがスペシャルゲストに！</p>
+	  </article>
+
+
+      <article>
+        <h3>PRML読書会（復習レーン）</h3>
+
+        <p>本レーンはゴールが見えてきたけれど、1周読んでみて振り返ってみると理解の粗さが目立つ。</p>
+		<p>＼もう1周しようず／</p>
+		<p>Shibuya.lispでお世話になっていたECナビ（現VOYAGE GROUP）さんの広い会議室を借りて再スタート。本レーンと交互に開催。(2010.5)</p>
+		<p>新たなガチ勢が到来し最大36人。<br>
+		大臣に褒められた人、うんこ漏らしたとか言う人、etc…</p>
+		<p>but<br>
+		  幹事の体調不良により開催できず。<br>
+		  引き継ぎがちゃんとできずにフェードアウト…</p>
+	  </article>
+
+
+      <article>
+        <h3>PRML読書会（復々習レーン）</h3>
+		<p>復習レーンの再開を求める声が多かったがなかなか手を付けられないまま年月が過ぎ…</p>
+		<p>幹事役で回し続けるのは色々しんどい</p>
+		<p>幹事業を引き継ぐなり分散化するなりして再開しよう</p>
+		<p>というわけで</p>
+		<p>　　＼とりあえず有志でキックオフだけでもやろうず／</p>
+		<p>そんな折、DeNAさんがヒカリエに引っ越してきた</p>
+		<p>　　　＼ヒカリエでPRMLキックオフやりたい！／</p>
+	  </article>
+      <article>
+		<p>と言っていたら showyouさんのお陰で実現 (2012.5)</p>
+		<p>幹事業務も有志の皆さんが快く引き受けて下さいました</p>
+		<table>
+		  <tr><td>司会進行</td> <td>sleepy_yoshiさん</td></tr>
+		  <tr><td>会場</td> <td>showyouさん</td></tr>
+		  <tr><td>出欠＆ATND</td> <td>Prunus1350さん</td></tr>
+		</table>
+		<p>（御礼）</p>
+		<p>今では最後列の席で絶賛<ruby>一般参加者<rt>ステルス</rt></ruby>しています。</p>
+		<p>それにしても今回は最初からガチ勢しか来てない…</p>
+	  </article>
+
+
+      <article>
+        <h2>もう１つ<ruby>余談<rt>ステマ</rt></ruby></h2>
+      </article>
+
+      <article>
+        <h3>皆さん、Courseraをご存知ですか？</h3>
+		<p><span style='color: blue;'>※ステマ注意※</span></p>
+		<p>スタンフォード大CS学部の
+		  <ul>
+		  <li>Daphne Koller教授</li>
+		  <li>Andrew Ng准教授<br>
+			<span style='font-size: 14pt;'>
+			  ※"Ng"は[ŋ:] みたいな発音のようです。finger [fiŋgə:]のngじゃなくてsinger [siŋə:] のngで。</span>
+		  </li>
+		  </ul>
+		  が立ち上げた、Stanford他28大学の講義をオンラインで無料で提供するベンチャー企業。</p>
+		<p>現時点では提供されている講義はCSを中心とした科学系が大半だが、今後人文系の講義も増やしていくとのこと。</p>
+	  </article>
+
+
+      <article>
+        <h3>Courseraの特長</h3>
+		<ul>
+		  <li>1本1本の講義ビデオが短め（10分前後）に出来ていて、集中力が途切れにくい</li>
+		  <li>講義は基本的に英語だが、クローズドキャプション（英語字幕）をON/OFFできるし、速度も調整可能</li>
+		  <li>途中に理解を試すクイズがあったりするので飽きないし落ちこぼれない</li>
+		  <li>コーディングが必要な宿題もある</li>
+		  <li>フォーラムで先生や他の受講生に質問を投げられる</li>
+		  <li>全講義（だいたい6〜8週）を受講し、規定以上の評価なら修了証がもらえる</li>
+		</ul>
+      </article>
+
+
+      <article>
+        <h3>おすすめ講義</h3>
+		<p><b>Machine Learning</b> (Andrew Ng)<br>
+		  <ul>
+			<li>PRMLの基礎固めに最適（皆さんには易しすぎるかも）<br>
+			  プログラミング演習ではOctaveを使います<br>
+			（次回8/20開講予定；全10週）</li>
+		  </ul>
+		  </p>
+		<p><b>Probabilistic Graphical Models</b> (Daphne Koller)<br>
+<!-- https://www.coursera.org/course/pgm -->
+		  <ul>
+			<li>PRML8章（下巻）でやります<br>
+			  （次回9/24開講予定；全11週）</li>
+		  </ul>
+		  </p>
+		<p><b>Natural Language Processing</b> (Dan Jurafsky, Christopher Manning)<br>
+<!-- https://www.coursera.org/course/nlp -->
+		  <ul>
+			<li>自然言語処理に興味のある方は是非！<br>
+			（次回開講日未定；全8週）</li>
+		  </ul>
+		  </p>
+	  </article>
+
+
+      <article>
+        <h2>さて本題</h2>
+      </article>
+
+
+      <article>
+        <h3>パーセプトロン<br>
+		<i>perceptron</i></h3>
+        <p>視覚と脳の機能をモデル化した線形分離アルゴリズム。</p>
+		<p>Frank Rosenblatt (1928-1969) が50年以上前 (1958) に提案。
+		  ニューラルネットワーク研究の礎として、パターン認識アルゴリズムの歴史の中で重要な地位を占めてきた。</p>
+		<p>当初は電動可変抵抗や電気モーターを利用したアナログハードウェアとして実装され、簡単な形や文字を識別するための学習などに用いられた。</p>
+		<p>単純なパーセプトロンは線形分離不可能な問題を解けないが、多層化し誤差逆伝播を行うことで線形分離不可能な問題にも適用できるようになった。</p>
+		<p>
+      </article>
+
+      <article>
+        <h3>パーセプトロンの仕組み</h3>
+		<p>入力データ <img src="chap04_1_7/xn.png" valign="center">
+		  （に非線形変換
+		  <img src="chap04_1_7/phi.png" valign="center"> を適用した特徴量
+		  <img src="chap04_1_7/phi_xn.png" valign="top">）に対し、
+		  <img src="chap04_1_7/wT_phi_xn.png" valign="top"> の値が
+		  クラスC<sub>1</sub>なら正、C<sub>2</sub> なら負になるような最適パラメータ
+		  <img src="chap04_1_7/w.png" valign="center"> を学習する。</p>
+		<p>誤分類されるパターンが多ければ大きく、少なければ 0 に近づくような誤差関数を設定し、
+		  確率的勾配降下法によって <img src="chap04_1_7/w.png" valign="center"> を求める。</p>
+		<!-- <p>計算の便宜上、目的変数の値として t_n ∈ { -1, +1 } </p>-->
+      </article>
+<!--
+{\bf w}^{\mathrm T}{\boldsymbol\phi}({\bf x}_n)
+          There is more text just underneath with a <code>code sample: 5px</code>.
+-->
+
+
+      <article>
+        <h3>パーセプトロン規準<br>
+		<i>perceptron criterion</i></h3>
+		<p>誤識別したパターンの総数を誤差関数とすれば自然だが、
+		  誤差が <img src="chap04_1_7/w.png" valign="center"> の区分的な定数関数であり、
+		  勾配がほとんどの場合 0 となってしまうため勾配降下法が効かない。</p>
+		<p>そこで別の誤差関数を考える。</p>
+		<p>目標変数 <img src="chap04_1_7/t_n.png" valign="center"> の値を { -1, +1 } とすれば、
+		  <img src="chap04_1_7/wT_phi_xn_tn.png" valign="top"> は
+		  正しく分類される場合に正、誤分類なら負の値を取る。</p>
+		<p><!--正しく分類されたサンプルについては無視し、-->誤分類された全サンプル集合
+		  <img src="chap04_1_7/cal_M.png" valign="center"> に対し定義される
+		  <blockquote>
+		  <img src="chap04_1_7/eq_4_54.png" valign="top">
+		  </blockquote>
+		  を<b>パーセプトロン規準</b>とし、これを最小化する <img src="chap04_1_7/w.png" valign="center"> を確率的勾配降下法で求める。
+		</p>
+      </article>
+
+      <article>
+        <h3>確率的勾配降下法<br>
+		  <i>stochastic gradient descent</i></h3>
+		<p>§3.1.3 (pp.141-142) 参照</p>
+		<p>個人的には大規模すぎるデータをシャッフルして（バッチではなく）１つずつ扱うのを「確率的 (stochastic) 勾配降下法」、次々現れるデータをオンライン的に扱うようなよくあるケースは「逐次的 (sequential) 勾配降下法」と呼ぶのがしっくりくる</p>
+		<p>結局まあどっちでもいい</p>
+      </article>
+
+      <article>
+		<p>
+		</p>
+      </article>
+
+      <article>
+        <h3>パーセプトロンの収束定理<br>
+		  <i>perceptron convergence theorem</i></h3>
+		<p>厳密解が存在する場合（＝学習データ集合が線形分離可能な場合）には、このアルゴリズムは有限回の繰り返しで厳密解に収束することが保証される。</p>
+		<p>とはいえ収束に必要な「有限回」はかなり多いので、実用的には分類不能なのか収束が遅いのか収束するまでわからない。</p>
+      </article>
+
+      <article>
+        <h3>パーセプトロンの限界</h3>
+		<ul>
+		  <li>パラメータの初期値やデータ順によってさまざまな解に収束する</li>
+		  <li>確率的な出力を提供しない</li>
+		  <li>K > 2クラスの場合への一般化が容易ではない</li>
+		  <li><b>線形分離不可能なデータに対して収束しない</b><br>
+			→ XORも解けないとはパターン認識四天王の面汚しよ<br>
+			→ それ多層化して誤差逆伝播法を導入すれば出来るよ</li>
+		</ul>
+      </article>
+
+      <article>
+		<h3>実装例 (Octave)</h3>
+<section>
+<pre>
+% データ読み込み
+data = load('fig47dat.txt');
+x = data(:, 1:2);
+y = data(:, 3);
+% w を適当に初期化
+w = rand(1,2) * 0.001;
+% η:学習率パラメータ
+eta = 1;
+% 確率的勾配降下法
+maxiter = 100;
+for t = 1:maxiter
+  plotData(x, y, w, t);
+  s = (x * w&#145;) .* y;
+  bad = find(s &lt; 0);
+  if length(bad) == 0
+    break;
+  end
+  w += sum((x(bad,:) .* [y(bad) y(bad)]) * eta);
+end
+</pre>
+</section>
+	  </article>
+
+      <article>
+<section>
+<pre>
+function plotData(x, y, w, t)
+  a = w(1,1); b = w(1,2);
+  figure; hold on;
+  title(sprintf('iter #%d', t));
+  axis([-1 1 -1 1]);
+  pos = find(y > 0); plot(x(pos,1), x(pos,2), '+b');
+  neg = find(y < 0); plot(x(neg,1), x(neg,2), '+r');
+  % 誤分類されたものに◯
+  s = (x * w&#145;) .* y;
+  bad = find(s < 0);
+  plot(x(bad,1), x(bad,2), 'og', 'markersize', 10);
+  % 決定境界に線を引く: ax + by = 0
+  if abs(a) <= abs(b)
+    plot([-1 1], [a/b -a/b], '-k', 'LineWidth', 1);
+  else
+    plot([b/a -b/a], [-1 1], '-k', 'LineWidth', 1);
+  end
+  hold off;
+end
+</pre>
+</section>
+      </article>
+
+	  <article>
+		<p>※データ (fig47dat.txt) は図4.7を見て適当に作成したもの</p>
+<pre>
+-0.75  0.9     1
+-0.77  0.6     1
+-0.53  0.65    1
+-0.4   0.75    1
+-0.1   -0.25   1
+0.25   0.75   -1
+0.4    -0.5   -1
+0.45   0.3    -1
+0.65   -0.9   -1
+0.95   0.9    -1
+</pre>
+	  </article>
+
+      <article class='fill'><img src="chap04_1_7/iter1.png"></article>
+      <article class='fill'><img src="chap04_1_7/iter2.png"></article>
+      <article class='fill'><img src="chap04_1_7/iter3.png"></article>
+      <article class='fill'><img src="chap04_1_7/iter4.png"></article>
+
+
+<!--
+          There is more text just underneath with a <code>code sample: 5px</code>.
+-->
+
+      <article>
+        <h3>おしまい</h3>
+        <ul>
+          <li>naoya_t@hatenablog<br>
+			<a href="http://naoyat.hatenablog.jp/">http://naoyat.hatenablog.jp/</a></li>
+		  <li>Google HTML5 slide template<br>
+			<a href="http://code.google.com/p/html5slides/">http://code.google.com/p/html5slides/</a></li>
+		  <li>Coursera<br>
+			<a href="https://www.coursera.org/">https://www.coursera.org/</a></li>
+		  <li>(TED Talks) Daphne Koller: What we're learning from online education<br>
+			<a href="http://www.ted.com/talks/daphne_koller_what_we_re_learning_from_online_education.html">http://www.ted.com/talks/daphne_koller_what_we_re_learning_from_online_education.html</a></li>
+        </ul>
+      </article>
+
+    </section>
+
+  </body>
+</html>
+
