@@ -1,17 +1,4 @@
 <!DOCTYPE html>
-
-<!--
-  Google HTML5 slide template
-
-  Authors: Luke Mahé (code)
-           Marcin Wichary (code and design)
-           
-           Dominic Mazzoni (browser compatibility)
-           Charles Chen (ChromeVox support)
-
-  URL: http://code.google.com/p/html5slides/
--->
-
 <html>
   <head>
     <title>4.1.7 パーセプトロンアルゴリズム</title>
@@ -19,20 +6,15 @@
     <script src="html5slides/slides.js"></script>
     <link rel="stylesheet" type="text/css" href="html5slides/tstyles.css">
   </head>
-  
+
   <style>
     /* Your individual styles here, or just use inline styles if that’s
        what you want. */
   </style>
 
   <body style='display: none'>
-
     <section class='slides layout-regular template-default'>
-      
-<!--
-      <article class='biglogo'>
-      </article>
--->
+
       <article>
         <h1 style=''>
           <span style='font-size:40pt;'>パーセプトロンアルゴリズム</span>
@@ -60,15 +42,16 @@
       </article>
       <article>
         <h3>自己紹介（続き）</h3>
-        <ul class="build">
+        <ul class="buildx">
           <li>最近面倒くさくて言ってないけど某国立大文学部卒<br>
-			（※経歴詳細はFacebookでも参照のこと）<br>
+			（※経歴詳細はFacebook等参照のこと）<br>
 			当然ながらこの分野は元々素人</li>
 		  <li>競技プログラミングとか時々やってます</li>
 		  <li>Shibuya.lisp発起人の1人<br>
 			時々ネタでSchemeコード書いてます。Gauche大好き</li>
 		  <li>最近はCourseraのステマしてます<br>
 			７月から <i>"<a href="https://www.coursera.org/course/qcomp">Quantum Mechanics and Quantum Computation</a>"</i> のクラスに参加中</li>
+		  <li>量子力学楽しいかも</li>
 		  <li>週末に謎のお題付きカラオケ（機械学習、自然言語処理、コンパイラ実装、量子力学etc.）を開催しています</li>
         </ul>
       </article>
@@ -83,22 +66,22 @@
 
       <article>
         <h3>PRML読書会（本レーン）</h3>
-        <div class="build">
+        <div class="buildx">
           <p>秋葉原の書泉ブックタワーでPRMLに一目惚れ。<br>
 			面白そうな教科書だし<b>図版が綺麗だったので</b>衝動買い。</p>
 		  <p>難しくて１人で読める気がしないので、当時住んでた墨田区の公民館で読書会を開いてみたのが第1回 (2009.5)。その後も公民館を転々としながら細々と開催。</p>
 		  <p>万単位の戦闘力を持つガチ勢が次々到来。一方で初期の参加者は次々脱落。</p>
 		  <p>トピックは追っているつもりだけれど、議論と数式展開がもはや地球人の肉眼では見えない…</p>
 		  <p>PRML hackathonを2回開催（＠曳舟文化センター）</p>
-		  <p>感動の<a href="http://atnd.org/events/6603">最終回</a>は参加者16名。<br>
-			訳者の1人@shima__shimaさんがスペシャルゲストに！</p>
+		  <p>感動の<a href="http://atnd.org/events/6603">最終回</a>は参加者16名。
+			スペシャルゲストにPRML訳者の1人@shima__shimaさん現る！</p>
 		</div>
 	  </article>
 
 
       <article>
         <h3>PRML読書会（復習レーン）</h3>
-        <div class="build">
+        <div class="buildx">
           <p>本レーンはゴールが見えてきたけれど、1周読んでみて振り返ってみると理解の粗さが目立つ。</p>
 		  <p>＼もう1周しようず／</p>
 		  <p>Shibuya.lispでお世話になっていたECナビ（現VOYAGE GROUP）さんの広い会議室を借りて再スタート。本レーンと交互に開催。(2010.5)</p>
@@ -113,7 +96,7 @@
 
       <article>
         <h3>PRML読書会（復々習レーン）</h3>
-        <div class="build">
+        <div class="buildx">
 		  <p>復習レーンの再開を求める声が多かったがなかなか手を付けられないまま年月が過ぎ…</p>
 		  <p>幹事役で回し続けるのは色々しんどい</p>
 		  <p>幹事業を引き継ぐなり分散化するなりして再開しよう</p>
@@ -125,7 +108,7 @@
 	  </article>
 
       <article>
-        <div class="build">
+        <div class="buildx">
 		  <p>と言っていたら showyouさんのお陰で実現 (2012.5)</p>
 		  <p>幹事業務も有志の皆さんが快く引き受けて下さいました：</p>
 		  <table>
@@ -157,7 +140,7 @@
 			  </li>
 			</ul>
 			</p>
-		  <p>が立ち上げた、Stanford他17大学116講義(※8/5現在)をオンラインで無料で提供するベンチャー企業。</p>
+		  <p>が立ち上げた、Stanford他17大学116講義（※2012/8/5現在）をオンラインで無料で提供するベンチャー企業。</p>
 		  <p align="center"><a href="https://www.coursera.org/">https://www.coursera.org/</a></p>
 		  <p>現時点では提供されている講義はCSを中心とした科学系が大半だが、今後人文系の講義も増やしていくとのこと。</p>
 		</div>
@@ -232,7 +215,6 @@
 		  <img src="images/w.png" valign="center"> を学習する。</p>
 		  <p>誤分類されるパターンが多ければ大きく、少なければ 0 に近づくような誤差関数を設定し、
 			確率的勾配降下法によって <img src="images/w.png" valign="center"> を求める。</p>
-		<!-- <p>計算の便宜上、目的変数の値として t_n ∈ { -1, +1 } </p>-->
 		</div>
       </article>
 
@@ -243,7 +225,7 @@
 		  <p>誤識別したパターンの総数を誤差関数とすれば自然だが、
 			誤差が <img src="images/w.png" valign="center"> の区分的な定数関数であり、
 			勾配がほとんどの場合 0 となってしまうため勾配降下法が効かない。</p>
-		  <p>そこで別の誤差関数を考える。</p>
+		  <p>そこで別の誤差関数を考えたい。</p>
 		</div>
 	  </article>
 
@@ -263,11 +245,14 @@
 			  <img src="images/eq_4_55a.png" valign="top">
 			</blockquote>
 		  </p>
+		  <p><img src="images/w.png" valign="center"> に定数を掛けても
+			<img src="images/wT_phi_xn.png" valign="top"> の正負は変化しないので、一般性を失うことなく
+			学習率パラメータ <img src="images/eta.png" valign="center"> を 1 に設定することができる。</p>
 		</div>
       </article>
 
       <article class="smaller">
-        <h4>[メモ]確率的勾配降下法<br>
+        <h4>[メモ] 確率的勾配降下法<br>
 		  <i>stochastic gradient descent</i></h4>
 		<div>
 		  <p>3.1.3 (pp.141-142) 参照</p>
@@ -276,18 +261,23 @@
 		</div>
       </article>
 
-      <article>
-        <!--<h3>パーセプトロンの収束定理<br>
-		  <i>perceptron convergence theorem</i></h3>-->
-        <div class="buildx">
-		</div>
-      </article>
+       <article>
+		<h3>パーセプトロン学習の各ステップ</h3>
+		<p>１回１回の更新には、誤分類されたパターンからの誤差への寄与を減少させる効果がある。
+		  <blockquote>
+			<img src="images/eq_4_56a.png" valign="top"><br>
+			　 　 　 　 　 　<img src="images/eq_4_56b.png" valign="top">
+		  </blockquote>
+		</p>
+		<p>学習中の <img src="images/w.png" valign="center"> の変化によって、以前正しく分類されていたパターンを誤分類させるようなこともあり得る。</p>
+		<p>パーセプトロン学習規則は、各ステップで総誤差関数を減少させることを保証していない。</p>
+	  </article>
 
       <article>
         <h3>パーセプトロンの収束定理<br>
 		  <i>perceptron convergence theorem</i></h3>
         <div class="buildx">
-		  <p>厳密解が存在する場合（＝学習データ集合が線形分離可能な場合）には、このアルゴリズムは有限回の繰り返しで厳密解に収束することが保証される。</p>
+		  <p>しかし、厳密解が存在する場合（＝学習データ集合が線形分離可能な場合）には、このアルゴリズムは有限回の繰り返しで厳密解に収束することが保証される。</p>
 		  <p>これが<b>パーセプトロンの収束定理</b></p>
 		  <p>とはいえ収束に必要な「有限回」はかなり多いので、実用的には分類不能なのか収束が遅いのか収束するまでわからない。</p>
 		</div>
@@ -300,7 +290,7 @@
 		  <li>K > 2クラスの場合への一般化が容易ではない</li>
 		  <li><b>線形分離不可能なデータに対して収束しない</b><br>
 			→ XORも解けないとはパターン認識四天王の面汚しよ<br>
-			→ それ多層化して誤差逆伝播法を導入すれば出来るよ</li>
+			→ それ多層化して<ruby>誤差逆伝播法<rt>バックプロパゲーション</rt></ruby>を導入すれば出来るよ</li>
 		</ul>
       </article>
 
@@ -387,7 +377,7 @@ end
 		<ul class="buildx">
 		  <li>この実装では誤分類サンプル数が 0 になるか、勾配降下を100ステップ行うかのどちらかで停止するようにしています</li>
 		  <li>パーセプトロン学習アルゴリズムの性質上、パラメータの初期値やデータ入力順によってさまざまな解に収束します</li>
-		  <li>紙面の都合により <code>plotData()</code> 関数に w = [0 0] 等を渡した場合のチェックを省いています。（完全なコードは発表資料と一緒に github に上げてあります）</li>
+		  <li>紙面の都合により <code>plotData()</code> 関数に w = [0 0] 等を渡した場合のチェックを省いています。（完全なコードは発表資料と一緒に <a href="https://github.com/naoyat/slides/tree/master/prml/4.1.7">github</a> に上げてあります）</li>
 		</ul>
 	  </article>
 
