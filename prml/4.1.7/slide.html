@@ -42,7 +42,7 @@
       </article>
       <article>
         <h3>自己紹介（続き）</h3>
-        <ul class="buildx">
+        <ul>
           <li>最近面倒くさくて言ってないけど某国立大文学部卒<br>
 			（※経歴詳細はFacebook等参照のこと）<br>
 			当然ながらこの分野は元々素人</li>
@@ -66,7 +66,7 @@
 
       <article>
         <h3>PRML読書会（本レーン）</h3>
-        <div class="buildx">
+        <div>
           <p>秋葉原の書泉ブックタワーでPRMLに一目惚れ。<br>
 			面白そうな教科書だし<b>図版が綺麗だったので</b>衝動買い。</p>
 		  <p>難しくて１人で読める気がしないので、当時住んでた墨田区の公民館で読書会を開いてみたのが第1回 (2009.5)。その後も公民館を転々としながら細々と開催。</p>
@@ -81,7 +81,7 @@
 
       <article>
         <h3>PRML読書会（復習レーン）</h3>
-        <div class="buildx">
+        <div>
           <p>本レーンはゴールが見えてきたけれど、1周読んでみて振り返ってみると理解の粗さが目立つ。</p>
 		  <p>＼もう1周しようず／</p>
 		  <p>Shibuya.lispでお世話になっていたECナビ（現VOYAGE GROUP）さんの広い会議室を借りて再スタート。本レーンと交互に開催。(2010.5)</p>
@@ -96,7 +96,7 @@
 
       <article>
         <h3>PRML読書会（復々習レーン）</h3>
-        <div class="buildx">
+        <div>
 		  <p>復習レーンの再開を求める声が多かったがなかなか手を付けられないまま年月が過ぎ…</p>
 		  <p>幹事役で回し続けるのは色々しんどい</p>
 		  <p>幹事業を引き継ぐなり分散化するなりして再開しよう</p>
@@ -110,7 +110,7 @@
 
       <article>
         <h3>PRML読書会（復々習レーン）（続き）</h3>
-        <div class="buildx">
+        <div>
 		  <p>幹事業務も有志の皆さんが快く引き受けて下さいました：</p>
 		  <table>
 			<tr><td>司会進行（＆アイスブレイク）</td> <td>sleepy_yoshiさん</td></tr>
@@ -130,7 +130,7 @@
 
       <article>
         <h3>皆さん、Courseraをご存知ですか？</h3>
-		<div class="buildx">
+		<div>
 		  <p><span style='color: blue;'>※ステマ注意※</span></p>
 		  <p>スタンフォード大CS学部の
 			<ul>
@@ -150,7 +150,7 @@
 
       <article>
         <h3>Courseraの特長</h3>
-        <ul class="buildx">
+        <ul>
 		  <li>1本1本の講義ビデオが短め（10分前後）に出来ていて、集中力が途切れにくい</li>
 		  <li>講義は基本的に英語だが、クローズドキャプション（英語字幕）をON/OFFできるし、速度も調整可能</li>
 		  <li>途中に理解を試すクイズがあったりするので飽きないし落ちこぼれない</li>
@@ -163,7 +163,7 @@
 
       <article>
         <h3>おすすめ講義</h3>
-        <div class="buildx">
+        <div>
 		  <p><b><a href="https://www.coursera.org/course/ml">Machine Learning</a></b> (Andrew Ng)<br>
 			<ul>
 			  <li>PRMLの基礎固めに最適（皆さんには易しすぎるかも）<br>
@@ -195,7 +195,7 @@
       <article>
         <h3>パーセプトロン<br>
 		<i>perceptron</i></h3>
-        <div class="buildx">
+        <div>
           <p>視覚と脳の機能をモデル化した線形分離アルゴリズム。</p>
 		  <p>Frank Rosenblatt (1928-1969) が50年以上前 (1958) に提案。
 			ニューラルネットワーク研究の礎として、パターン認識アルゴリズムの歴史の中で重要な地位を占めてきた。</p>
@@ -206,7 +206,7 @@
 
       <article>
         <h3>パーセプトロンの仕組み</h3>
-        <div class="buildx">
+        <div>
 		  <p>入力データ <img src="images/xn.png" valign="center">
 		  （に非線形変換
 		  <img src="images/phi.png" valign="center"> を適用した特徴量
@@ -222,7 +222,7 @@
       <article>
         <h3>パーセプトロン規準<br>
 		<i>perceptron criterion</i></h3>
-        <div class="buildx">
+        <div>
 		  <p>誤識別したパターンの総数を誤差関数とすれば自然だが、
 			誤差が <img src="images/w.png" valign="center"> の区分的な定数関数であり、
 			勾配がほとんどの場合 0 となってしまうため勾配降下法が効かない。</p>
@@ -230,20 +230,21 @@
 		  <p>目標変数 <img src="images/t_n.png" valign="center"> の値を { -1, +1 } とすれば、
 			<img src="images/wT_phi_xn_tn.png" valign="top"> は
 			正しく分類される場合に正、誤分類なら負の値を取る。</p>
+		  <p>誤分類されたサンプル全てを含み、正しく分類されたサンプルは含まない集合
+			<img src="images/cal_M.png" valign="center"> について
+			<blockquote>
+			  <img src="images/eq_4_54.png" valign="top">
+			</blockquote>
+		  </p>
+		  <p>を<b>パーセプトロン規準</b>として定義する。</p>
 		</div>
 	  </article>
 
       <article>
         <h3>パーセプトロン規準（続き）<br>
 		<i>perceptron criterion</i></h3>
-        <div class="buildx">
-		  <p>正しく分類されたサンプルについては無視し、誤分類された全サンプル集合
-			<img src="images/cal_M.png" valign="center"> に対し定義される
-			<blockquote>
-			  <img src="images/eq_4_54.png" valign="top">
-			</blockquote>
-		  </p>
-		  <p>を<b>パーセプトロン規準</b>とし、これを最小化する <img src="images/w.png" valign="center"> を確率的勾配降下法で求める。
+        <div>
+		  <p>これを最小化する <img src="images/w.png" valign="center"> は確率的勾配降下法で求めることができる。
 			<blockquote>
 			  <img src="images/eq_4_55a.png" valign="top">
 			</blockquote>
@@ -260,7 +261,8 @@
 		<div>
 		  <p>3.1.3 (pp.141-142) 参照</p>
 		  <p>個人的には大規模すぎるデータをシャッフルして（バッチではなく）１つずつ扱うのを「確率的 (stochastic) 勾配降下法」、次々現れるデータをオンライン的に扱うようなよくあるケースは「逐次的 (sequential) 勾配降下法」と呼ぶのがしっくりくる</p>
-		  <p>結局まあどっちでもいい</p>
+		  <p>あと勾配降下法 (gradient descent) / 最急降下法 (steepest descent) では個人的には勾配降下派だけれど</p>
+		  <p>まあどっちでもいい</p>
 		</div>
       </article>
 
@@ -279,7 +281,7 @@
       <article>
         <h3>パーセプトロンの収束定理<br>
 		  <i>perceptron convergence theorem</i></h3>
-        <div class="buildx">
+        <div>
 		  <p>しかし、厳密解が存在する場合（＝学習データ集合が線形分離可能な場合）には、このアルゴリズムは有限回の繰り返しで厳密解に収束することが保証される。</p>
 		  <p>これが<b>パーセプトロンの収束定理</b></p>
 		  <p>とはいえ収束に必要な「有限回」はかなり多いので、実用的には分類不能なのか収束が遅いのか収束するまでわからない。</p>
@@ -288,7 +290,7 @@
 
       <article>
         <h3>パーセプトロンの限界</h3>
-		<ul class="buildx">
+		<ul>
 		  <li>確率的な出力を提供しない</li>
 		  <li>K > 2クラスの場合への一般化が容易ではない</li>
 		  <li><b>線形分離不可能なデータに対して収束しない</b><br>
@@ -371,13 +373,9 @@ end
       <article class='fill'><img src="images/iter3.png"></article>
       <article class='fill'><img src="images/iter4.png"></article>
 
-
-<!--
-          There is more text just underneath with a <code>code sample: 5px</code>.
--->
       <article>
         <h3>注意点</h3>
-		<ul class="buildx">
+		<ul>
 		  <li>この実装では誤分類サンプル数が 0 になるか、勾配降下を100ステップ行うかのどちらかで停止するようにしています</li>
 		  <li>パーセプトロン学習アルゴリズムの性質上、パラメータの初期値やデータ入力順によってさまざまな解に収束します</li>
 		  <li>紙面の都合により <code>plotData()</code> 関数に w = [0 0] 等を渡した場合のチェックを省いています。（完全なコードは発表資料と一緒に <a href="https://github.com/naoyat/slides/tree/master/prml/4.1.7">github</a> に上げてあります）</li>
