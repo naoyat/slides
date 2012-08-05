@@ -26,6 +26,7 @@
       </article>
       
 
+      <article> <p></p> </article>
       <article>
         <h3>自己紹介</h3>
         <ul class="build">
@@ -251,8 +252,9 @@
 		<i>perceptron criterion</i></h3>
         <div>
 		  <p>誤識別したパターンの総数を誤差関数とすれば自然だが、
-			誤差が <img src="images/w.png" valign="center"> の区分的な定数関数であり、
-			勾配がほとんどの場合 0 となってしまうため勾配降下法が効かない。</p>
+			<!--誤差が <img src="images/w.png" valign="center"> の区分的な定数関数であり、 -->
+			<img src="images/w.png" valign="center"> の変化に伴い変化する決定境界がデータ点を横切る度に不連続となるため
+			勾配がほとんどの場合 0 となってしまい、勾配降下法が効かない。</p>
 		  <p>そこで別の誤差関数を考えたい。</p>
 		  <p>目標変数 <img src="images/t_n.png" valign="center"> の値を { -1, +1 } とすれば、
 			<img src="images/wT_phi_xn_tn.png" valign="top"> は
