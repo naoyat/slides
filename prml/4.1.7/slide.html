@@ -154,6 +154,26 @@
 		  <p><img src="images/w.png" valign="center"> に定数を掛けても
 			<img src="images/wT_phi_xn.png" valign="top"> の正負は変化しないので、一般性を失うことなく
 			学習率パラメータ <img src="images/eta.png" valign="center"> を 1 に設定することができる。</p>
+		  <p>とかPRMLはしれっと言ってるんだけど、一般性を失うことなく云々って何？ 学習率の設定によっては収束速度とか変わりそうなイメージがあるけどどうなの？</p>
+		</div>
+      </article>
+
+      <article>
+        <h3>パーセプトロンの収束と学習率パラメータ</h3>
+        <div>
+		  <p>→sleepy_yoshiさんとのshuyoさんとの議論が参考になります：<br>
+			<ul>
+			  <li><a href="http://d.hatena.ne.jp/sleepy_yoshi/20120605/p1">パーセプトロンの収束性定理と学習率について</a></li>
+			  <li><a href="http://d.hatena.ne.jp/sleepy_yoshi/20120616/p1">パーセプトロンの収束に学習率は関係ない件</a></li>
+			  <li><a href="http://d.hatena.ne.jp/sleepy_yoshi/20120620/p1">パーセプトロンの収束に学習率が関係ないのは初期値が0のときだけ</a></li>
+			</ul>
+		  </p>
+		  <p>結論から言うと
+			<ul>
+			  <li>重みベクトル <img src="images/w.png" valign="center"> の初期値が 0 の場合は <img src="images/eta.png" valign="center"> は収束速度に全く関係しない（同じ分離超平面に収束）</li>
+			  <li>0 でない場合は収束までの誤り回数に影響する（学習率が小さい方がいい、とも一概に言えない）</li>
+			</ul>
+		  </p>
 		</div>
       </article>
 
