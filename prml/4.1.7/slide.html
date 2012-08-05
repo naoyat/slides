@@ -253,15 +253,15 @@ end
 <pre>
 function plotData(x, y, w, t)
   a = w(1,1); b = w(1,2);
-  figure; hold on;
+  figure(t); clf(); hold on;
   title(sprintf('iter #%d', t));
   axis([-1 1 -1 1]);
-  pos = find(y > 0); plot(x(pos,1), x(pos,2), '+b');
-  neg = find(y < 0); plot(x(neg,1), x(neg,2), '+r');
+  pos = find(y > 0); plot(x(pos,1), x(pos,2), '+b', 'markersize', 10);
+  neg = find(y < 0); plot(x(neg,1), x(neg,2), '+r', 'markersize', 10);
   % 誤分類されたものに◯
   s = (x * w&#145;) .* y;
   bad = find(s < 0);
-  plot(x(bad,1), x(bad,2), 'og', 'markersize', 10);
+  plot(x(bad,1), x(bad,2), 'og', 'markersize', 20);
   % 決定境界に線を引く: ax + by = 0
   if abs(a) <= abs(b)
     plot([-1 1], [a/b -a/b], '-k', 'LineWidth', 1);

@@ -3,8 +3,9 @@ function plotData(x, y, w, t)
 a = w(1,1);
 b = w(1,2);
 
-% figure();
-figure(1, 'Position',[0,0,300,300]); clf();
+% figure(t); % イテレーション毎にウィンドウを開く
+figure(1); % 新しいウィンドウを開かない
+clf();
 hold on;
 title(sprintf('iter #%d', t));
 axis([-1 1 -1 1]);
