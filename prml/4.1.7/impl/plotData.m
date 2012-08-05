@@ -3,18 +3,20 @@ function plotData(x, y, w, t)
 a = w(1,1);
 b = w(1,2);
 
-figure; hold on;
+% figure();
+figure(1, 'Position',[0,0,300,300]); clf();
+hold on;
 title(sprintf('iter #%d', t));
 axis([-1 1 -1 1]);
 
 pos = find(y > 0);
 neg = find(y < 0);
-plot(x(pos,1), x(pos,2), '+b');
-plot(x(neg,1), x(neg,2), '+r');
+plot(x(pos,1), x(pos,2), '+b', 'markersize', 10);
+plot(x(neg,1), x(neg,2), '+r', 'markersize', 10);
 
 s = (x * w') .* y;
 bad = find(s < 0);
-plot(x(bad,1), x(bad,2), 'og', 'markersize', 10);
+plot(x(bad,1), x(bad,2), 'og', 'markersize', 20);
 
 % ax + by = 0
 %       y = -a/b x
@@ -29,4 +31,5 @@ else
 end
 
 hold off;
+pause(0.5);
 end
