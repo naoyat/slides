@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Presentation</title>
+
+    <meta charset='utf-8'>
+    <script src='./slides.js'></script>
+
+	<script type="text/javascript" src="./MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+	</script>
+	<script type="text/x-mathjax-config">
+     MathJax.Hub.Config({
+       tex2jax: {
+         inlineMath: [['$','$'], ['\\(','\\)']],
+         displayMath: [['$$','$$'], ['\\[','\\]']],
+         processEscapes: true
+       }
+     });
+	</script>
+  </head>
+
+  <style>
+    /* Your individual styles here, or just use inline styles if that’s
+       what you want. */
+  </style>
+
+  <body style='display: none'>
+
+    <section class='slides layout-regular template-default'>
+      
+      <article>
+        <h1>html5slides + MathJax</h1>
+        <p>naoya_t<br>
+          Aug 9, 2012</p>
+      </article>
+
+	  <article class='smaller'>
+		<pre>
+&lt;!DOCTYPE html>
+&lt;html>
+ &lt;head>
+  &lt;title>Presentation&lt;/title>
+
+  &lt;meta charset='utf-8'>
+  &lt;script src='http://html5slides.googlecode.com/svn/trunk/slides.js'>&lt;/script>
+
+  &lt;script type="text/javascript"
+          src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+  &lt;/script>
+  &lt;script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']],
+        processEscapes: true
+      }
+    });
+  &lt;/script>
+ &lt;/head>
+
+ &lt;style>
+  /* Your individual styles here, or just use inline styles if that’s
+     what you want. */
+ &lt;/style>
+
+ &lt;body style='display: none'>
+ ...</pre>
+	  </article>
+      
+      <article>
+<pre>&lt;article>
+  &lt;p>$ [ \zeta(s) = \sum_{n=1}^\infty\frac{1}{n^s} ] $&lt;/p>
+&lt;/article></pre>
+        <p>
+		  $ [ \zeta(s) = \sum_{n=1}^\infty\frac{1}{n^s} ] $
+		</p>
+<pre>&lt;article>
+  &lt;p>$$ [ \zeta(s) = \sum_{n=1}^\infty\frac{1}{n^s} ] $$&lt;/p>
+&lt;/article></pre>
+        <p>
+		  $$ [ \zeta(s) = \sum_{n=1}^\infty\frac{1}{n^s} ] $$
+        </p>
+      </article>
+
+    </section>
+
+  </body>
+</html>

@@ -3,8 +3,8 @@ function plotData(x, y, w, t)
 a = w(1,1);
 b = w(1,2);
 
-% figure(t); % イテレーション毎にウィンドウを開く
-figure(1); % 新しいウィンドウを開かない
+figure(t); % イテレーション毎にウィンドウを開く
+%figure(1); % 新しいウィンドウを開かない
 clf();
 hold on;
 title(sprintf('iter #%d', t));
@@ -32,5 +32,5 @@ else
 end
 
 hold off;
-pause(0.5);
+%pause(0.5);
 end
