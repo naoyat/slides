@@ -1,0 +1,21 @@
+二分探索木の生成過程をGIFアニメ化してみるテスト
+  (c)2012 by naoya_t
+
+◆必要なもの
+  graphviz
+  ImageMagick
+  あと GCC とか AWK とか
+
+◆ファイル解説
+
+  t_gen.cc
+    木に値を１つずつ挿入しながらgraphvizのDOT言語ファイルにダンプするC++プログラム。
+
+  topcenter.c
+    graphvizが出力したグラフ画像（をBMPに変換したもの）を走査してrootノードの位置を見つけ、
+      <画像幅> <画像高さ> <rootノードの上端x座標> <同y座標>
+    を出力する自作ツール。GIFアニメ化する際の位置合わせに必要。
+
+  t_anim_gen.awk
+    graphvizが出力した画像ファイル群からGIFアニメを作るスクリプト。
+

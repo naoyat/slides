@@ -1,0 +1,6 @@
+t_gen
+t_*.dot
+t_*.gif
+t_*.png
+t_*.bmp
+*~
