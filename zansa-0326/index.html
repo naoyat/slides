@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>「機械学習の問題を実際に解いてみよう」</title>
+    <meta charset='utf-8'>
+    <script src="html5slides/slides.js"></script>
+    <link rel="stylesheet" type="text/css" href="html5slides/tstyles.css">
+  </head>
+
+  <style>
+span.taicho {
+  font-style: italic;
+/* font-weight: bold; */
+  color: blue;
+}
+span.toumin {
+  font-style: italic;
+/* font-weight: bold; */
+  color: green;
+}
+span.daiji {
+ /* font-style: italic;*/
+  font-weight: bold;
+ /*  color: blue;*/
+}
+  </style>
+
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+      <article>
+        <h1 style=''>
+          <span style='font-size:30pt;'>「機械学習の問題を実際に解いてみよう」</span>
+        </h1>
+        <p>
+          @naoya_t<br>
+          2013.3.26
+          Zansa第15回勉強会
+        </p>
+      </article>
+
+      <article>
+        <h3>自己紹介</h3>
+        <ul>
+		  <li>@naoya_t</li>
+		  <li><img src="images/keroro.jpg"></li>
+          <li>ソフトウェア系エンジニア。CodeIQで時々問題を出してます</li>
+		  <li>2009年5月からPRML読書会を主催</li>
+		  <li>パターン認識とか機械学習とか元々趣味で勉強していたはずなのですが…
+		  昨年あたりからそれっぽい仕事をしています</li>
+          <li>＼まだまだ勉強中！／</li>
+        </ul>
+      </article>
+
+<!--
+      <article>
+        <ul>
+          <li><img src="images/selfintro.png"><br>(wantedlyより)</li>
+          <li>とある国立大の文学部卒。この分野は元々素人<br>
+			（※経歴詳細はFacebookでも見て）</li>
+		  <li>最近初級ラテン語読書会に通い始めた</li>
+          <li>(脳内)自然言語処理楽しい</li>
+        </ul>
+      </article>
+ -->
+
+      <article>
+        <h3>PRML復々習レーン</h3>
+        <ul>
+          <li>機械学習のバイブル、C.M.ビショップ著<br>
+            「パターン認識と機械学習(PRML)」<br>
+		    <img src="images/prml1.jpg"> <img src="images/prml2.jpg"><br>
+            を読む会を都内で開催しています</li>
+          <li>３周目です(ｷﾘｯ<br>
+            （本レーン → 復習レーン → 復々習レーン）</li>
+
+		  <li>本レーンは2009年5月から</li>
+
+          <li>最近は優秀なスタッフに運営を任せて、後ろの方で内職しながらちびちび読んでます</li>
+        </ul>
+      </article>
+
+      <article>
+        <ul>
+          <li>PRMLを読み始めた動機、読書会を始めた経緯その他は<br>
+            <ul>
+              <li>PRML読書会の思い出（と復々習レーンkick-offのお知らせ）- naoya_t@hatenablog<br>
+                <a href="http://naoyat.hatenablog.jp/entry/2012/04/09/175304">http://naoyat.hatenablog.jp/entry/2012/04/09/175304</a></li>
+              <li>風が吹けばジュンク堂で「機械学習の学習」- Cybozu Inside Out<br>
+                <a href="http://developer.cybozu.co.jp/tech/?p=654">http://developer.cybozu.co.jp/tech/?p=654</a></li>
+            </ul>
+            あたりに詳しいのでここでは割愛します</li>
+
+		  <li>時間遡行を何度繰り返してもワルプルムルの夜を倒せない、そんな皆さんのご参加をお待ちしています！<br>
+          （最後に告知あります）</li>
+          </ul>
+      </article>
+
+      <!-- <article class='fill'><img src="images/kininaru.jpg" width="100%"></article> -->
+      <article>
+        <h2>本題</h2>
+      </article>
+
+      <article>
+        <h1 style=''>
+          <span style='font-size:33pt;'>「機械学習の初歩の初歩の初歩」</span>
+          <br>
+          <span style='font-size:22pt;'>小学生でも解ける易しい問題で学ぶ機械学習の初歩</span>
+        </h1>
+        <p>
+          @naoya_t<br>
+          2013.3.26
+          Zansa第15回勉強会
+        </p>
+      </article>
+
+      <article>
+        <h3>【おさらい】教師あり学習・教師なし学習</h3>
+        <ul>
+          <li>手掛かりになるデータ（入力と出力の組）が前もって与えられていて、未知のデータに対し出力すべきもの（分類、回帰）を予測する。入力 x と出力 y の関係から関数 y = f(x) を求める問題。<br>
+            →<b>教師あり学習</b> (supervised learning)</li>
+
+          <li>未知のデータだけを見てどんな風にクラスタを形成しているか調べたりする。出力すべきものがあらかじめ決まっていない。<br>
+            →<b>教師なし学習</b> (unsupervised learning)</li>
+
+          <li>その中間（手掛かりが部分的に与えられている）<br>
+            →<b>半教師あり学習</b> (semi-supervised learing)<br>
+            （※今日の発表では触れません）</li>
+        </ul>
+      </article>
+
+<!-- EX1 -->
+      <article>
+        <h3>教師あり学習の例</h3>
+        <p>
+          100個のデータ点（例えば２次元座標）に、各点に分類ラベル（例えば 0 と 1）が振ったものが与えられたとします。<br>
+          <br>
+          この分類済みデータを訓練データとして用いることができる状況で、新たに与えられたデータ点に対し分類が行えるようにしたいです。<br>
+          <br>
+          どうしたらよいでしょうか？
+          </p>
+      </article>
+
+      <article>
+        <p>
+          <b>とりあえずプロットしてみる</b><br>
+          <br>
+          <img src="images/01plot.png" border=1><br>
+          緑のラベルの点々と赤のラベルの点々の間にスパっと直線が引けそうですよね。
+          </p>
+      </article>
+
+      <article>
+        <p>
+          <img src="images/01plotL.png" border=1><br>
+          未知のデータがやって来ても、この線より上にあれば緑、下にあれば赤に分類すればよさそうですね。<br>
+          <br>
+          <!-- フィッシャーの線形判別法、-->パーセプトロン、SVM（サポートベクタマシン）などの線形分類器は、
+          訓練データからこのような境界線を自動的に決定し、
+          それに基いて新たなデータ点の分類を行うことができます。
+          <span class="daiji">（Rならライブラリがあるので実装は不要）</span>
+        </p>
+      </article>
+
+<!-- EX2 -->
+      <article>
+        <h3>教師なし学習の例（１）</h3>
+        <p>あらかじめラベルの振られていないデータ集合が与えられました。<br>
+          <img src="images/02plot1.jpg"><br>
+          見た感じ何となく３つの塊（クラスタ）に分かれていますね。
+          ３つのクラスタに分類してラベルを振りたいです。<br>
+        <ul>
+        </ul>
+      </article>
+
+      <article>
+        <p>分類したいクラスタ数が先に決まっているなら、
+          クラスタリングの定番K-means法（K平均法）を使ってみましょう。<br>
+          <img src="images/02plot2.jpg"><br>
+          各データ点にランダムにクラスタを割り振り、クラスタの重心を求め、重心に近いクラスタに再分配、を収束するまで繰り返します。<br>
+          <span class="daiji">（Rならライブラリがあるので実装は不要）</span>
+        <ul>
+        </ul>
+      </article>
+
+<!-- EX3 -->
+      <article>
+        <h3>教師なし学習の例（２）</h3>
+        <p>
+          ラベルの振られていない100個のデータ点が与えられたとします。（この例では３次元）<br>
+          <img src="images/03plot1.jpg"><br>
+          この中から、他のデータ点とは違う珍しい（あるいは異常な）性質を持った点を探すにはどうしたらよいですか？<br>
+        </p>
+      </article>
+
+      <article>
+        <p>
+          1-class SVM (OC-SVM), Local outlier factor (LOF) 等の手法がありますが
+          とりあえず今日はLOFを覚えて帰って下さい。<br>
+          <img src="images/lof.png"><br>
+          (1) 各データ点について、その点からk番目に近い点までの<br>
+          　 距離を求め、その距離をその点のスコアとする<br>
+          (2) 異常値は近傍にデータ点が少ないのでスコアが大きい<br>
+          こうして得られたスコアが基準値を超えるものを検出する手法です。
+          <span class="daiji">（Rならライブラリがあるので実装不要）</span>
+        </p>
+      </article>
+
+      <article>
+        <h2>では問題を解いてみよう！</h2>
+      </article>
+
+      <article class='smaller'>
+        <h3>第1問：「金貨の真贋を見分けよう」</h3>
+        <p>
+          <img src="images/photo1.jpg"><br>
+          <br>
+          週末に海賊船で催されたPRML読書会に参加したN君は、船内に山のように積まれた金銀財宝に目を奪われました。
+          近くにあった宝箱の1つを開けてみると、きらきらと輝くコインが何枚も入っていました。<br>
+          <br>
+          手に取ってみるとどれもずっしりと重みがあります。金貨に違いありません。<br>
+          <br>
+          好きなだけ持って帰ってよいと言われ、勉強会帰りに何枚か鞄に詰め込んで帰ることにしました。<br>
+        </p>
+      </article>
+      <article class='smaller'>
+        <p>
+          <!-- <img src="images/photo2.jpg"><br> -->
+          家に帰ってから少し冷静になったN君は「気前よく配っていたけれど、この金貨は本物なのだろうか」と疑い始めました。<br>
+          <br>
+          鞄には20枚の金貨が入っていましたが、友人のアルキメデスに計測してもらったところ、20枚とも体積も重さも異なりました。（→Q1/CodeIQ_mycoins.txt）<br>
+          <br>
+          ネットで検索してみたところ、金貨の体積と重さと真贋のデータを得られました。（→Q1/CodeIQ_auth.txt）<br>
+          <br>
+          このデータを参考に、貰ってきた金貨の真贋を見分けてください。
+        </p>
+
+        <hr>
+
+        <p>
+          <b>【データ】</b><br>
+          Q1/CodeIQ_mycoins.txt<br>
+          　→ 20枚のコインの計測結果（by アルキメデス）<br>
+          　　 コインの体積[cm^3], 重さ[g] 。半角スペース区切り<br>
+          <br>
+          Q1/CodeIQ_auth.txt<br>
+          　→ 金貨の体積と重さと真贋のデータ。<br>
+          　　 コインの体積[cm^3], 重さ[g], 真贋（本物:1, 偽物:0）が半角スペース区切り。<br>
+          <br>
+          <b>【解答方法】</b><br>
+          それぞれのコインの真贋を、1行にコイン1枚ずつ、本物なら「1」、偽物なら「0」、どちらとも言えなければ「？」と記入したファイルをアップロードしてください。
+        </p>
+      </article>
+
+<!-- A1 -->
+      <article class='smaller'>
+        <h3>ヒント</h3>
+        <p>
+          Q1/CodeIQ_auth.txt のデータをプロットしてみます。<br>
+          <br>
+          <img src="images/a1-1.jpg" border=1><br>
+          <br>
+          見覚えがありますよね！<br>
+          これはきれいに線形分類できそうです。<br>
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <p>
+          <br>
+          <img src="images/a1-1L.jpg"><br>
+          <br>
+          これに Q1/CodeIQ_data.txt のデータを重ねてみると…<br>
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <p>
+          <img src="images/a1-2.jpg"><br>
+          いいですね。<br>
+          <br>
+          コードを書いてみましょう。
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <h3>Rでのコード例</h3>
+        <p>
+        SVMでkernlabパッケージを用いますので、事前に
+        <code>install.packages("kernlab")</code>
+        しておいて下さい。</p>
+        <section>
+<pre>library(kernlab)
+
+# ファイルからデータ読み込み
+auth &lt;- read.table("Q1/CodeIQ_auth.txt")
+mycoins &lt;- read.table("Q1/CodeIQ_mycoins.txt")
+
+# auth を教師とする分類器をSVMで
+svm &lt;- ksvm(V3 ~., data=auth)
+
+# 手持ちのコインのデータに分類器を適用
+result &lt;- predict(svm, mycoins)
+
+# ファイルに出力
+write.table(ifelse(result > 0.5, 1, 0), "answer.txt", quote=F,
+            col.names=F, row.names=F)</pre>
+        </section>
+      </article>
+
+
+<!-- Q2 -->
+      <article class='smaller'>
+        <h3>第2問：「食べられるキノコはどれだ？」</h3>
+        <p>
+          海賊船で催されたPRML読書会は楽しかった。<br>
+          機械学習の事も少しはわかった気がするし、金貨も沢山貰えた。偽金貨もずいぶん混ざっていたが。<br>
+          本物とわかった金貨を何枚か貴金属店で売って小金ができた。<br>
+          貴金属店の店主は海賊船での読書会の話もそこで金貨を貰った事も信じていないようだったが、
+          そのうち何枚かは百年前に北大西洋で沈没した豪華客船に積まれていた幻の金貨だそうで、店主もほくほくしていた。<br>
+          <br>
+          これでカーネル多変量解析の本でも買おうかと思っていたN君に、海賊船の船長からメールが届いた。<br>
+          <br>
+          <span class='taicho'>
+            太平洋のある島にたどり着いた。島は家から道路から何もかも金でできている。<br>
+          </span>
+          <br>
+          もしかしてあの「ジパング」ですか？<br>
+          <br>
+          <span class='taicho'>
+            しかしこの島には誰も住んでおらず、あるものといえば金ばかりで食料が全くない。<br>
+            食用になりそうなのは道端に生えているキノコぐらいだ<br>
+          <br>
+          この島のキノコは見たところ３種類あるようだ。そのうち２種類は毒キノコらしい。<br>
+            誤って食べた隊員が三日三晩笑い転げたり泣き叫んだりしている。<br>
+            ３種類とも金色なので色では区別がつかない。<br>
+          </span>
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <p>とりあえず死人は出ていないらしい。<br>
+          <br>
+          <span class='taicho'>
+          採ってきたキノコと、隊員が食べたキノコのデータを送るから、食べても大丈夫なキノコを教えてほしい。<br>
+          </span>
+          <br>
+          キノコの傘の大きさと柄の長さが記されたデータが送られてきた。<br>
+          <br>
+          このデータをもとに採ってきたキノコをクラスタリングして、隊員が食べた毒キノコの含まれないグループのキノコを船長に教えてあげよう。</p>
+        <hr>
+
+        <p>
+          <b>【採ってきたキノコと、隊員が食べたキノコのデータ】</b><br>
+          Q2/CodeIQ_data.txt<br>
+          　→ 採ってきたキノコ（96本）<br>
+          　　 柄の長さ[cm]と傘の直径[cm]を半角スペース区切りで<br>
+          <br>
+          Q2/CodeIQ_eaten.txt<br>
+          　→ 隊員が食べたキノコ（6本）<br>
+          　　 柄の長さ[cm]と傘の直径[cm]と食べた隊員の安否(o/x)を半角スペース区切りで<br>
+          <br>
+          <b>【解答方法】</b><br>
+          食べていいキノコ（本数不明）のみについて、柄の長さ[cm]と傘の直径[cm]をCodeIQ_data.txtと同じ要領で、半角スペース区切りで記入してください。<br>
+          （ソート順や改行コードの差異は採点側で吸収しますので心配しないでください）<br>
+        </p>
+      </article>
+
+<!-- A2 -->
+      <article class='smaller'>
+        <h3>ヒント</h3>
+        <p>
+          Q2/CodeIQ_data.txt のデータをプロットしてみます。<br>
+          <br>
+          <img src="images/a2-1.jpg">
+          <br>
+          またしても見覚えがありますよね！<br>
+          <br>
+          これを３つにクラスタリングするには…？
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <p>
+          そう、K-means法です。<br>
+          <br>
+          <img src="images/02plot2.jpg">
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <p>
+          Q2/CodeIQ_eaten.txt のデータもプロットしてみます。<br>
+          食べて大丈夫だったキノコを o 印, 大丈夫ではなかったキノコを x 印にしています。<br>
+          <br>
+          <img src="images/a2-2.jpg"><br>
+          <br>
+          これを先ほどのプロットに重ねると…
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <p>
+          <img src="images/a2-4.jpg"><br>
+          <br>
+          安全なキノコは右上の緑のクラスタのようです。<br>
+          <br>
+          コードを書いてみましょう。
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <h3>Rでのコード例</h3>
+        <p>
+          Rには <code>kmeans()</code> というそのまんまの関数がビルトインであるのでこれを使いましょう。
+          ライブラリパッケージのインストールは必要ありません。</p>
+        <section>
+<pre># ファイルからデータ読み込み
+eaten &lt;- read.table("Q2/CodeIQ_eaten.txt")
+data &lt;- read.table("Q2/CodeIQ_data.txt")
+
+# eatenからカラム3（o/x）を除外したものとdataを縦に結合
+m &lt;- rbind(eaten[1:6, -3], data)
+
+k &lt;- 3
+km &lt;- kmeans(m, k)
+
+# 3番目と6番目のキノコは隊員が食べて大丈夫だったので、
+# そのキノコが属するクラスタIDを安全クラスタとします。
+# ここでは6番目を使っていますが3番目でも構いません。
+safe_cluster_id &lt;- km$cluster[6]
+
+# 安全クラスタに属するものだけを抽出します
+safe_cluster &lt;- subset(m, km$cluster == safe_cluster_id)
+
+# 大丈夫なキノコのうち、最初の2つは隊員が食べた物なので除外
+answer &lt;- safe_cluster[-c(1,2),]
+
+# ファイルに出力
+write.table(answer, "answer.txt", quote=F, col.names=F, row.names=F, sep=" ")</pre>
+        </section>
+      </article>
+
+
+<!-- Q3 -->
+      <article class='smaller'>
+        <h3>第3問「金塊か、キノコ料理か」</h3>
+        <p>
+食糧になるものが金色のキノコしかない黄金の島で、われわれはN君が選んでくれた安全なキノコを齧りながら探索を続けていた。<br>
+見渡す限りの黄金だけでも十分な財宝だが、この島には他のお宝は何もないのだろうか。<br>
+<br>
+金色のキノコが生い茂る道をしばらく行くと<br>
+<br>
+　ザザザッ<br>
+<br>
+風がざわめき、周囲で金色の影が動いた。<br>
+後ろから甘い香りが漂ってきた、と思ったら急激に意識が遠のいて行った。<br>
+<br>
+　＊ ＊ ＊<br>
+<br>
+気がつくとわれわれは手足を縛られ、島民と思われる者たちに包囲されていた。<br>
+島民たちはみな屈強という風でもないが、身に纏う金色の鎧が眩しい。<br>
+<br>
+あの鎧はぜひともいただいて帰りたい。<br>
+とかそんな事を呑気に考えているうちにわれわれは島民たちに担がれ、全島民が集まる集会場のような場所に連れて行かれた。<br>
+<br>
+　＊ ＊ ＊<br>
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <p>
+島民は全部で百人ほどいるようだ。老若男女問わず金色の装束を身につけていて眩しい。<br>
+<br>
+われわれの言葉がわかると思われる島民が1人、こちらにやってきて手足の縄を解きながら言った。<br>
+<br>
+<span class='toumin'>
+　われわれの島には、百年に一度、海を渡って大切な客人がやって来るという<br>
+　言い伝えがある。<br>
+　客人の機嫌を損ねると、島が沈んでしまうと伝えられている。<br>
+</span>
+<br>
+それは手厚くもてなさないといけませんな・・・<br>
+<br>
+<span class='toumin'>
+　しかし、毎年一度は盗賊がやってくる。<br>
+　盗賊たちが言うには、珍しくもなんともない金色の物が目当てなのだそうだが。<br>
+</span>
+<br>
+そうか、この島にいると金は存在が当たり前過ぎて空気並みの価値しかないのか・・・<br>
+<br>
+<span class='toumin'>
+　金色の物には特に価値があるわけではないから、<br>
+　盗賊だとわかった奴らにはこの金色の塊を持てるだけ持たせて追い払っている。<br>
+</span>
+<br>
+それ金塊ですから！こんなのが流出したら金相場が暴落しますから！<br>
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <p>
+<span class='toumin'>
+　ただ、客人なのだとしたら、言い伝えに従って、機嫌を損ねないように<br>
+　手厚くもてなしたい。<br>
+　あそこに積んであるキノコをふんだんに使った料理で。<br>
+<br>
+　どうだ？美味そうだろ。<br>
+</span>
+<br>
+傘の大きさと柄の長さを見ただけで毒キノコかどうかだいたいわかるようになってきたわれわれの目には、それは毒キノコの山にしか見えなかった。<br>
+<br>
+<span class='toumin'>
+　そこで、きみたちが盗賊なのか客人なのかを調べ、適切な処遇をしたい。<br>
+　調べ方はこの島の伝統に則った方法だ。<br>
+　ここに100個の玉がある。<br>
+　この中に1つだけ貴重な石でできた玉がある。<br>
+　大切な客人ならば、それを選び出すことができるはずだ。<br>
+　大きさも重さも調べたいだけ調べてもらって構わない。<br>
+</span>
+<br>
+単に毎年やってくる盗賊に100分の1の確率でキノコ料理を食わせているだけの話に聞こえなくもないが・・・<br>
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <p>
+まあいい。状況を整理しよう。<br>
+<br>
+・われわれは捕らわれの身である<br>
+・島民たちはわれわれが盗賊なのか客人なのか知りたがっている<br>
+・100個の玉の中に1つだけ入っている貴重な石でできた玉を選べば客人、他の玉を選べば盗賊とみなされる<br>
+・客人とみなされれば毒キノコ料理を食わされ、3日3晩笑い転げ泣き転げる。命を落とさないとも限らない<br>
+・盗賊とみなされれば金塊を持てるだけ持たされて島から追放される<br>
+<br>
+ここは盗賊とみなしてもらって、金塊を持てるだけいただいてこの島を出るのが得策だろう。<br>
+あのキノコはもううんざりなので、確実に盗賊認定を受けたい。<br>
+<br>
+<span class='toumin'>
+　ちなみに、きみたちには全部同じ大きさの金色の玉にしか見えないだろうが、<br>
+　われわれは目で見て、触ってみるだけでその玉がどれなのかわかる。」<br>
+<br>
+　きみたちには無理だろうから、手持ちの機材で計測するなり、知人に連絡するなり<br>
+　好きにしてもらって構わない。<br>
+</span>
+<br>
+確かに全部同じ大きさの金色の玉にしか見えない。<br>
+外見上なにかの目印があるのかと思って調べてみたのだが、どれも傷ひとつないきれいな球形をしており区別がつかない。<br>
+<br>
+・・・こうなるとN君が頼りだ。<br>
+<br>
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <p>
+　＊ ＊ ＊<br>
+<br>
+というわけで、N君への今回の依頼はこれだ。<br>
+<br>
+<span class='taicho'>
+　・100個の玉のうち、貴重な石でできた玉がどれなのか教えてほしい。<br>
+　・判定が微妙なものがあれば、怪しい玉も含めて3つぐらい教えてほしい。<br>
+</span>
+<br>
+必ず盗賊認定されたいので、こちらは教えてくれた玉以外を選ぶことにする。<br>
+<br>
+よろしく頼むよ。<br>
+</p>
+
+<hr>
+
+<p>
+<b>【与えられるデータ】</b><br>
+Q3/hundred.txt<br>
+　→ 100個の玉のデータ。<br>
+　　 重さ[g]、比熱[J/kg・K]、光の反射率[％] の順にスペース区切り<br>
+　　 玉はすべて半径1.0cmの球体。<br>
+<br>
+
+<b>【解答方法】</b><br>
+他の玉とは性質が違いそうな玉を３つ選んで、100個の玉のデータと同じ形式で記入したファイル「answer.txt」を作成して提出してください。<br>
+（ソート順や改行コードの差異は採点側で吸収しますので心配しないでください）
+        </p>
+      </article>
+
+<!-- A3 -->
+      <article class='smaller'>
+        <h3>ヒント</h3>
+        <p>
+          Q3/hundred.txt のデータをプロットしてみます。<br>
+          <br>
+          <img src="images/a3-1.jpg"><br>
+          <br>
+          見覚えがありますよね！<br>
+          <br>
+          もしかして、LOFを使えば貴重な石で出来た玉が見つかるのでは？
+        </p>
+      </article>
+
+      <article class='smaller'>
+        <h3>Rでのコード例</h3>
+        <p>RではLOFがパッケージDMwRで実装されているので、これを利用すると数行で求めることができます。事前に
+          <code>install.packages("DMwR")</code>
+          しておいて下さい。</p>
+<section>
+<pre>library(DMwR)
+
+# ファイルからデータ読み込み
+hundred &lt;- read.table("Q3/hundred.txt")
+
+# LOFスコアを計算。
+# ここでは k=3 としていますが、
+# 本設問ではk=2〜10ぐらいの範囲なら同じ玉がトップに来るようなデータになっています。
+# （k=1だと警告メッセージが出ます）
+outlier.scores &lt;- lofactor(hundred, k=3)
+
+# スコア上位3件を抽出
+outliers &lt;- order(outlier.scores, decreasing=T)[1:3]
+write.table(hundred[outliers,], "answer.txt", quote=F, col.names=F, row.names=F, sep=" ")</pre>
+        </section>
+      </article>
+<!--
+      <article>
+        <h3>お知らせ</h3>
+            <p>昨晩ML等でお知らせした問題データZIPファイル (zansa0326_naoyat.zip) を解凍すると、その中に３問分の解答データがパスワード付きで answer.zip として収納されています。<br>
+              <br>
+              パスワードは<br>
+              <code>zansa326</code><br>
+              だったと思います。
+            </p>
+      </article>
+-->
+<!-- QQ -->
+      <article>
+        <h2>最後に</h2>
+      </article>
+
+      <article>
+        <h3>告知、というかステマ</h3>
+        <ul>
+          <li>今日お話しした問題の解説は、リクナビNEXTさんのエンジニアライフ応援サイト「Tech総研」にも掲載されています。<br>
+            → <a href="http://next.rikunabi.com/tech/docs/ct_s03600.jsp?p=002315">「機械学習基礎」簡単な問題を解いて理解しよう！</a></li>
+
+          <li>PRMLも絶賛復々習中です。次回復々習レーン#10は4/7(日)13:00から
+           渋谷・神泉の株式会社VOYAGE GROUPの「AJITO」でやります。<br>
+            → <a href="http://atnd.org/events/37714">http://atnd.org/events/37714</a>
+            </li>
+        </ul>
+      </article>
+
+      <article>
+        <h2>Thank you!!</h2>
+      </article>
+
+    </section>
+
+  </body>
+</html>
+
