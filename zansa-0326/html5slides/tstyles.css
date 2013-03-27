@@ -1,0 +1,26 @@
+.slides.template-default > article:not(.nobackground):not(.biglogo) {
+  background-image:none !important;
+}
+/*
+.slides.template-default > article h1 {
+    font-size : 40pt;
+    padding-bottom : 5px;
+    border-bottom : 3px black solid;
+    margin-bottom : 30px;
+}
+*/
+
+.slides.template-default > article h3 {
+    font-size : larger;
+    padding-bottom : 5px;
+    border-bottom : 3px black solid;
+    margin-bottom : 30px;
+}
+.slides.template-default > article ul {
+    margin-top : 25px;
+    margin-left : 50px;
+}
+.slides.template-default > article dd {
+    margin-top : 10px; 
+    margin-bottom : 20px;
+}
