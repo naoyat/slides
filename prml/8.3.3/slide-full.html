@@ -90,6 +90,39 @@ $ ...</pre>
 
 
       <article class='smaller'>
+<h3>実装 (Python 2.7; 要PIL)</h3>
+		<pre>
+import sys
+import random
+import Image
+
+def add_noise(img_orig, noise_rate):
+    width, height = img.size
+    S = width * height
+    n = int(S * noise_rate + 0.5)
+    to_toggle = [False] * S
+    for i in range(n): to_toggle[i] = True
+    random.shuffle(to_toggle)
+    pix = img.load()
+    for y in range(height):
+        for x in range(width):
+            i = y * width + x
+            if to_toggle[i]:
+                pix[x,y] = 255 - pix[x,y]
+    return img
+
+if __name__ == '__main__':
+    if len(sys.argv) != 4:
+        print "usage: python %s <orig> <noise-rate> <output>" % sys.argv[0]
+        sys.exit()
+
+    img = Image.open(sys.argv[1])
+    img2 = add_noise(img, float(sys.argv[2]) / 100)
+    img2.save(sys.argv[3])
+</pre>
+	  </article>
+
+      <article class='smaller'>
         <h3>マルコフ確率場によるモデリング</h3>
 		<div>
 		  <p>
@@ -182,28 +215,145 @@ $ ...</pre>
 
 
       <article class='smaller'>
-        <h3>ICMの実行例</h3>
+        <h3>ノードの選択順は任意</h3>
         <div>
-		  <p>左上から順番に走査しながら、反転するとエネルギーを減らせるピクセルを反転。</p>
-		  <p>走査前後のエネルギー差分がεを下回ったら（あるいは10回やったら）終了。</p>
+		  <p>
+		  １回の操作で１つの変数しか変化しないので、ノード更新は例えばテレビ画面のスキャンのように規則的に行ってもよいし、ランダムにノードを選択していってもよい。
+		  </p>
+		  <p align="center">
+			<table border="0"><tr>
+			  <td>左上から順にノードを選択した場合</td>
+			  <td>ランダムにノードを選択した場合</td>
+			  </tr><tr>
+			  <td><img src="images/process-seq.gif" width="100%"></td>
+			  <td><img src="images/process-rand.gif" width="100%"></td>
+			</tr></table>
+		  </p>
+		  <p>↑ 同じ画像（10％ノイズ入り）に対し、１つは左上から規則的に、もう１つはランダムにノードを選択しながら操作を繰り返す様子（２周目まで）をGIFアニメにしてみた</p>
+		</div>
+      </article>
+
+
+      <article class='smaller'>
+        <h3>remove_noise_icm.py : ICMによるノイズ除去</h3>
+        <div>
+		  <p>左上から順番に走査しながら、反転するとエネルギーを減らせるピクセルを反転。<br>
+			走査前後のエネルギー差分がεを下回ったら（あるいは10回やったら）終了。</p>
+		  <pre>
+$ python remove_noise.py revenge10.png revenge10-a.png 1.0 2.1 0
+$ python remove_noise.py revenge10.png revenge10-b.png 0.1 0.1 0.01</pre>
 			<table border="0"><tr>
 			  <td>元画像</td>
 			  <td>ノイズ10％付加</td>
 			  </tr><tr>
-			  <td><img src="images/revenge.png" width="300"></td>
-			  <td><img src="images/revenge10.png" width="300"></td>
+			  <td><img src="images/revenge.png" width="250"></td>
+			  <td><img src="images/revenge10.png" width="250"></td>
 			  </tr><tr>
 			  <td><i>β</i> = 1.0, <i>η</i> = 2.1, <i>h</i> = 0</td>
 			  <td><i>β</i> = 0.1, <i>η</i> = 0.1, <i>h</i> = 0.01</td>
 			  </tr><tr>
-			  <td><img src="images/revenge10-lb.png" width="300"></td>
-			  <td><img src="images/revenge10-res.png" width="300"></td>
+			  <td><img src="images/revenge10-lb.png" width="250"></td>
+			  <td><img src="images/revenge10-res.png" width="250"></td>
 			</tr></table>
 		</div>
       </article>
 
+
       <article class='smaller'>
-        <h3>ICMの実行例</h3>
+<h3>実装 (Python 2.7; 要PIL)</h3>
+		<pre>
+import sys
+import Image  # PIL
+
+if (sys.argv) == 6:
+    BETA = float(sys.argv[3])
+    ETA  = float(sys.argv[4])
+    H    = float(sys.argv[5])
+else:
+    BETA = 0.1
+    ETA  = 0.1
+    H    = 0.01
+
+EPS = 1e-5
+
+def E(xs, ys, width, height):
+    S = width * height
+    s0 = s1 = s2 = 0
+    for i in range(S):
+        s0 += xs[i]
+        s2 += xs[i] * ys[i]
+    for y in range(height-1):
+        for x in range(width-1):
+            i = y*width + x
+            s1 += xs[i] * xs[i+1] + xs[i] * xs[i+width]
+
+    return H * s0 - BETA * s1 - ETA * s2
+</pre>
+      </article>
+
+      <article class='smaller'>
+<pre>
+def remove_noise(img):
+    width, height = img.size
+    S = width * height
+    pix = img.load()
+    xs = [0]*S
+    ys = [0]*S
+    for x in range(width):
+        for y in range(height):
+            i = y*width + x
+            xs[i] = ys[i] = 1 if pix[x,y] > 0 else -1
+
+    def de(i):
+        s0 = xs[i]
+        s1 = 0
+        if i > 0:       s1 += xs[i] * xs[i-1]
+        if i < S-1:     s1 += xs[i] * xs[i+1]
+        if i >= width:  s1 += xs[i] * xs[i-width]
+        if i < S-width: s1 += xs[i] * xs[i+width]
+        s2 = xs[i] * ys[i]
+        curr_e = H * s0 - BETA * s1 - ETA * s2
+        toggled_e = -curr_e
+
+        return toggled_e < curr_e
+
+    def reflect():
+        for i in range(S):
+            x = i % width
+            y = i / width
+            pix[x,y] = 255 if xs[i] == 1 else 0
+</pre>
+      </article>
+
+      <article class='smaller'>
+<pre>
+    energy = E(xs, ys, width, height)
+    print 0, energy
+    for j in range(10):
+        for i in range(S):
+            if de(i): xs[i] = -xs[i]
+
+        new_energy = E(xs, ys, width, height)
+        print 1+j, new_energy
+
+        if energy - new_energy < EPS: break
+        energy = new_energy
+
+    reflect()
+    return img
+
+if __name__ == '__main__':
+    if len(sys.argv) < 3:
+        print "usage: python %s &lt;input> &lt;output> [beta eta h]" % sys.argv[0]
+        sys.exit()
+    img = Image.open(sys.argv[1])
+    img2 = remove_noise(img)
+	img2.save(sys.argv[2])
+</pre>
+      </article>
+
+      <article class='smaller'>
+        <h3>実行例</h3>
         <div>
 			<table border="0"><tr>
 			  <td>ノイズ5％</td>
@@ -244,27 +394,6 @@ $ ...</pre>
 		</div>
       </article>
 
-
-      <article class='smaller'>
-        <h3>ノードの選択順は任意</h3>
-        <div>
-		  <p>
-		  １回の操作で１つの変数しか変化しないので、ノード更新は例えばテレビ画面のスキャンのように規則的に行ってもよいし、ランダムにノードを選択していってもよい。
-		  </p>
-		  <p align="center">
-			<table border="0"><tr>
-			  <td>左上から順にノードを選択した場合</td>
-			  <td>ランダムにノードを選択した場合</td>
-			  </tr><tr>
-			  <td><img src="images/process-seq.gif" width="100%"></td>
-			  <td><img src="images/process-rand.gif" width="100%"></td>
-			</tr></table>
-		  </p>
-		  <p>↑ 同じ画像（10％ノイズ入り）に対し、１つは左上から規則的に、もう１つはランダムにノードを選択しながら操作を繰り返す様子（２周目まで）をGIFアニメにしてみた</p>
-		</div>
-      </article>
-
-
       <article class='smaller'>
         <h3>より高い確率をもつ解を見つける手法</h3>
         <div>
@@ -300,7 +429,8 @@ $ ...</pre>
 
 
       <article class='smaller'>
-        <h3>グラフカット版ノイズ除去の実装</h3>
+		<h3>remove_noise_graphcut.py :<br>
+		  グラフカットによるノイズ除去</h3>
 		<div>
 		  <p><a href="http://projects.skewed.de/graph-tool/">graph-tool</a> (Python) を使ってみた。
 			Boostのグラフライブラリのラッパー的な感じ。</p>
@@ -321,12 +451,71 @@ $ python remove_noise_graphcut.py revenge10.png revenge10-gc.png
 		</div>
       </article>
 
-		  <!--
-		  <p>パラメータの与え方がいまいち分からなくて試行錯誤</p>
-		  -->
+      <article class='smaller'>
+<h3>実装 (Python 2.7; 要PIL + graph-tool)</h3>
+		<pre>
+import sys
+import Image
+from graph_tool.all import *
+
+def remove_noise(img):
+    width, height = img.size
+    S = width * height
+
+    g = Graph()
+    capacity = g.new_edge_property("int")
+
+    for i in range(S):
+        v = g.add_vertex()
+    start = g.add_vertex()
+    goal = g.add_vertex()
+
+    pix = img.load()
+    for x in range(width):
+        for y in range(height):
+            i = y*width + x
+            p = 1 if pix[x,y] == 255 else 0  # {0, 1}
+
+            e = g.add_edge(start, i)
+            capacity[e] = 5 + 4*p
+            e = g.add_edge(i, goal)
+            capacity[e] = 5 + 4*(1-p)</pre>
+	  </article>
+      <article class='smaller'>
+		<pre>
+    for i in range(S):
+        if i > 0:
+            e = g.add_edge(i, i-1)
+            capacity[e] = 3
+        if i < S-1:
+            e = g.add_edge(i, i+1)
+            capacity[e] = 3
+        if i >= width:
+            e = g.add_edge(i, i-width)
+            capacity[e] = 3
+        if i < S-width:
+            e = g.add_edge(i, i+width)
+            capacity[e] = 3
+    residual = push_relabel_max_flow(g, start, goal, capacity)
+    mincut, partition = min_st_cut(g, start, residual)
+    for i in range(S):
+        x = i % width
+        y = i / width
+        pix[x,y] = 255 if partition.a[i] else 0
+    return img
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print "usage: python %s &lt;input> &lt;output>" % sys.argv[0]
+        sys.exit()
+    img = Image.open(sys.argv[1])
+    img2 = remove_noise(img)
+    img2.save(sys.argv[2])
+</pre>
+    </article>
 
 	<article class='smaller'>
-      <h3>グラフカット版ノイズ除去の結果（１）</h3>
+      <h3>実行結果（１）</h3>
 		<div>
 		  <table border="0">
 			<tr>
@@ -362,7 +551,7 @@ $ python remove_noise_graphcut.py revenge10.png revenge10-gc.png
       </article>
 
 	<article class='smaller'>
-      <h3>グラフカット版ノイズ除去の結果（２）</h3>
+      <h3>実行結果（２）</h3>
 		<div>
 		  <table border="0">
 			<tr>

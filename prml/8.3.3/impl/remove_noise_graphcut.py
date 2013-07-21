@@ -22,7 +22,6 @@ def remove_noise(img):
 
     pix = img.load()
 
-    # 4, 5 は適当パラメータ
     for x in range(width):
         for y in range(height):
             i = y*width + x
