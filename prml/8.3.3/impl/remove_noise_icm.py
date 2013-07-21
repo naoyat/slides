@@ -6,9 +6,14 @@ import os
 import Image
 from myutil import save_or_show, save_serial
 
-H = 0.01
-BETA = 0.1
-ETA = 0.1
+if (sys.argv) == 6:
+    BETA = float(sys.argv[3])
+    ETA  = float(sys.argv[4])
+    H    = float(sys.argv[5])
+else:
+    BETA = 0.1
+    ETA  = 0.1
+    H    = 0.01
 
 EPS = 1e-5
 
@@ -86,11 +91,11 @@ def remove_noise(img):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print "usage: python %s <input> [<output>]" % sys.argv[0]
+        print "usage: python %s <input> [<output> [beta eta h]]" % sys.argv[0]
         sys.exit()
 
     infile = sys.argv[1]
-    if len(sys.argv) == 3:
+    if len(sys.argv) >= 3:
         outfile = sys.argv[2]
     else:
         outfile = None
