@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>8.3.3 例：画像のノイズ除去</title>
+    <meta charset='utf-8'>
+    <script src="html5slides/slides.js"></script>
+    <link rel="stylesheet" type="text/css" href="html5slides/tstyles.css">
+  </head>
+
+  <style>
+    /* Your individual styles here, or just use inline styles if that’s
+       what you want. */
+  </style>
+
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+
+      <article>
+        <h3>自己紹介</h3>
+        <ul>
+		  <li>naoya_t</li>
+		  <li><img src="images/keroro.jpg"></li>
+		  <li><del>2009年5月からPRML読書会を主宰</del><br>
+			今は後ろのほうで一般参加者してます</li>
+		  <li>機械学習を仕事で使うようになって１年</li>
+		  <li>来週から近所で「<a href="http://atnd.org/events/41427">PRML平日レーン</a>」的な事をやります（席埋まっちゃいましたすみません＞＜）</li>
+		  <li>PRMLカラオケクラスタひみつ集会（という名のアニソンカラオケ）を時々やってます<br>
+			（hashk1さんに対するアニカラハラスメントを開始）</li>
+        </ul>
+      </article>
+
+      <article> <p></p> </article>
+
+      <article>
+        <h1 style=''>
+          <span style='font-size:40pt;'>例：画像のノイズ除去</span>
+          <br>
+          <span style='font-size:32pt;'>PRML §8.3.3</span>
+        </h1>
+        <p>
+          naoya_t<br>
+          2013.7.21 PRML復々習レーン
+        </p>
+<script type="text/javascript"><!--
+    hatena_counter_name = "n4_t";
+    hatena_counter_id = "11";
+    hatena_counter_ref = document.referrer+"";
+    hatena_counter_screen = screen.width + "x" + screen.height+","+screen.colorDepth;
+//--></script>
+<script type="text/javascript" src="http://counter.hatena.ne.jp/js/counter.js"></script>
+<noscript><img src="http://counter.hatena.ne.jp/n4_t/11" border="0" alt="counter"></noscript>
+      </article>
+
+
+      <article class='smaller'>
+        <h3>例：画像のノイズ除去</h3>
+        <div>
+		  <p>
+			<ul>
+			  <li>ノイズを含む観測画像が２値ピクセル値 y<sub><i>i</i></sub> ∈ { -1, +1 } の２次元配列として記述されているとする (i = 1, ..., D)
+			  <li>この観測画像は x<sub><i>i</i></sub> ∈ { -1, +1 } で記述される未知の（ノイズのない）２値画像から、ある小さい確率でピクセルの符号をランダムに反転させることによって得られたものとする
+			  <li>観測画像としてノイズ付加画像が１つ与えられたとき、この画像から元々のノイズなし画像を復元したい
+			</ul>
+		  </p>
+		  <p align="center">
+			<img src="images/revenge10.png" border="1" align="absmiddle"> → <img src="images/revenge.png" border="1" align="absmiddle">
+		  </p>
+		</div>
+      </article>
+
+
+      <article class='smaller'>
+		<h3>add_noise.py：ノイズ付加プログラム (要PIL)</h3>
+	  <pre>usage: python add_noise.py &lt;orig> &lt;noise-rate> [&lt;output>]</pre>
+	  <pre>
+$ python add_noise.py revenge.png 5 revenge05.png
+$ python add_noise.py revenge.png 10 revenge10.png
+$ python add_noise.py revenge.png 15 revenge15.png
+$ python add_noise.py revenge.png 20 revenge20.png
+$ python add_noise.py revenge.png 25 revenge25.png
+$ ...</pre>
+
+	  <img src="images/revenge.png" width="30%">
+	  <img src="images/revenge05.png" width="30%">
+	  <img src="images/revenge10.png" width="30%">
+	  <img src="images/revenge15.png" width="30%">
+	  <img src="images/revenge20.png" width="30%">
+	  <img src="images/revenge25.png" width="30%">
+	  </article>
+
+
+      <article class='smaller'>
+        <h3>マルコフ確率場によるモデリング</h3>
+		<div>
+		  <p>
+			x<sub><i>i</i></sub> ∈ { -1, +1 } ・・・元の画像（ノイズなし）<br>
+			y<sub><i>i</i></sub> ∈ { -1, +1 } ・・・観測画像（ノイズを含む）<br>
+			<ul>
+			  <li>ノイズレベルが十分低いため、x<sub><i>i</i></sub> と y<sub><i>i</i></sub> の間に強い相関が残っていることが期待される</li>
+			  <li>隣接ピクセル x<sub><i>i</i></sub> および x<sub><i>j</i></sub> の間にも強い相関がある</li>
+			</ul>
+		  </p>
+		  <p>
+			これらの事前知識を表現するマルコフ確率場モデルを考える。（図8.31）
+		  </p>
+		  <p align="center">
+			<img src="images/fig_8_31.png" height="200">
+		  </p>
+		</div>
+	  </article>
+
+
+      <article class='smaller'>
+		<h3>このモデルのエネルギー関数</h3>
+		<p align="center">
+		  <img src="images/eq_8_42.png">
+		</p>
+
+		<p><b>-<i>η</i>x<sub><i>i</i></sub>y<sub><i>i</i></sub>：クリーク {x<sub><i>i</i></sub>, y<sub><i>i</i></sub>} に対応（<i>η</i>は正定数）</b></p>
+		<p>
+		  ・x<sub><i>i</i></sub> と y<sub><i>i</i></sub> が同符号のとき：低いエネルギー（高い確率）<br>
+		  ・x<sub><i>i</i></sub> と y<sub><i>i</i></sub> が異符号のとき：高いエネルギー（低い確率）<br>
+		  を持つような関数でこれらの変数間の相関を表現する。
+		</p>
+
+		<p><b>-<i>β</i>x<sub><i>i</i></sub>x<sub><i>j</i></sub>：クリーク {x<sub><i>i</i></sub>, x<sub><i>j</i></sub>} に対応（<i>β</i>も正定数）</b></p>
+
+		<p>隣接する２ピクセルが異符号の場合よりも同符号の場合の方がエネルギーが低くなるようにしたい。
+		</p>
+
+		<p><b><i>h</i>x<sub><i>i</i></sub>：バイアス項</b></p>
+		<p>ピクセル値が特定の符号を持ちやすくするようにバイアスをかける効果を持つ。
+		</p>
+	  </article>
+
+
+      <article class='smaller'>
+        <h3>ノイズ無し画像の条件付き分布</h3>
+		<div>
+		  <p>
+			エネルギー関数 <i>E</i> (<b>x</b>, <b>y</b>) を
+		  </p>
+		  <p align="center">
+			<img src="images/eq_8_42.png">
+		  </p>
+		  <p>
+			として、<b>x</b> および <b>y</b> の同時分布は
+		  </p>
+		  <p align="center">
+			<img src="images/eq_8_43.png">
+		  </p>
+		  <p>
+			<b>y</b> の各成分にノイズ入り画像の各ピクセル値をセットする
+		  </p>
+		  <p>
+			→ ノイズなし画像の条件付き分布 <i>p</i>(<b>x</b>|<b>y</b>) が暗に定まる。</p>
+		  <p>
+			最大確率をもつ画像 <b>x</b>（⇔ エネルギー関数 <i>E</i> (<b>x</b>, <b>y</b>) を最小にする <b>x</b>）を求めることで、ノイズ無し画像を復元する。
+		  </p>
+		  <p>この問題は、統計物理学において広く研究されてきた<b>イジングモデル (Ising model)</b> の例である。
+		  → <a href="http://ja.wikipedia.org/wiki/%E3%82%A4%E3%82%B8%E3%83%B3%E3%82%B0%E6%A8%A1%E5%9E%8B">イジング模型 (Wikipedia)</a>
+		  </p>
+		</div>
+	  </article>
+
+
+      <article class='smaller'>
+        <h3>反復条件付きモード<br>
+		  <i>(ICM: iterated conditional modes)</i></h3>
+        <div>
+		  <p>(1) 最初に変数 {x<sub><i>i</i></sub>} を初期化する。（x<sub><i>i</i></sub> = y<sub><i>i</i></sub> でよい）</p>
+		  <p>(2) ノード x<sub><i>j</i></sub> を１つ選ぶ。<br>
+			　 ノードの選択は規則的（左上から順にとか）でもランダムでも構わない。</p>
+		  <p>(3) 他のノード変数の値は固定したまま x<sub><i>j</i></sub> の２つの可能な状態 {-1, +1} における<br>
+　 全エネルギーを評価する。</p>
+		  <p>(4) x<sub><i>j</i></sub> を、全エネルギーが小さくなる方に設定する。</p>
+		  <p>(5) 停止基準を満たすまで(2)〜(4)を繰り返す</p>
+		  <p>という簡単な繰り返し法（<b>反復条件付きモード, ICM</b>）で、高い確率（できれば最大確率）<i>p</i> (<b>x</b>) をもつ画像 <b>x</b> を求めることができる。</p>
+		  <p>但し、実際に求まるのは局所最大点であり、大域的最大点とは限らない。</p>
+		</div>
+      </article>
+
+
+      <article class='smaller'>
+        <h3>ICMの実行例</h3>
+        <div>
+		  <p>左上から順番に走査しながら、反転するとエネルギーを減らせるピクセルを反転。</p>
+		  <p>走査前後のエネルギー差分がεを下回ったら（あるいは10回やったら）終了。</p>
+			<table border="0"><tr>
+			  <td>元画像</td>
+			  <td>ノイズ10％付加</td>
+			  </tr><tr>
+			  <td><img src="images/revenge.png" width="300"></td>
+			  <td><img src="images/revenge10.png" width="300"></td>
+			  </tr><tr>
+			  <td><i>β</i> = 1.0, <i>η</i> = 2.1, <i>h</i> = 0</td>
+			  <td><i>β</i> = 0.1, <i>η</i> = 0.1, <i>h</i> = 0.01</td>
+			  </tr><tr>
+			  <td><img src="images/revenge10-lb.png" width="300"></td>
+			  <td><img src="images/revenge10-res.png" width="300"></td>
+			</tr></table>
+		</div>
+      </article>
+
+      <article class='smaller'>
+        <h3>ICMの実行例</h3>
+        <div>
+			<table border="0"><tr>
+			  <td>ノイズ5％</td>
+			  <td>ノイズ10％</td>
+			  <td>ノイズ15％</td>
+			  <td>ノイズ20％</td>
+			  </tr><tr>
+			  <td><img src="images/revenge05.png" width="180"></td>
+			  <td><img src="images/revenge10.png" width="180"></td>
+			  <td><img src="images/revenge15.png" width="180"></td>
+			  <td><img src="images/revenge20.png" width="180"></td>
+			  </tr><tr>
+			  <td><img src="images/revenge05-res.png" width="180"></td>
+			  <td><img src="images/revenge10-res.png" width="180"></td>
+			  <td><img src="images/revenge15-res.png" width="180"></td>
+			  <td><img src="images/revenge20-res.png" width="180"></td>
+			  </tr><tr>
+			  <td>ノイズ25％</td>
+			  <td>ノイズ30％</td>
+			  <td colspan="2" rowspan="3">
+<table>
+<tr><td>ノイズ</td> <td>走査回数</td> <td>所要時間(sec)</td></tr>
+<tr><td align="right">5%</td> <td align="right">5</td> <td align="right">0.850</td></tr>
+<tr><td align="right">10%</td> <td align="right">6</td> <td align="right">1.037</td></tr>
+<tr><td align="right">15%</td> <td align="right">6</td> <td align="right">1.029</td></tr>
+<tr><td align="right">20%</td> <td align="right">8</td> <td align="right">1.374</td></tr>
+<tr><td align="right">25%</td> <td align="right">10</td> <td align="right">1.705</td></tr>
+<tr><td align="right">30%</td> <td align="right">8</td> <td align="right">1.373</td></tr>
+</table>
+			  </tr><tr>
+			  <td><img src="images/revenge25.png" width="180"></td>
+			  <td><img src="images/revenge30.png" width="180"></td>
+			  </tr><tr>
+			  <td><img src="images/revenge25-res.png" width="180"></td>
+			  <td><img src="images/revenge30-res.png" width="180"></td>
+			  </tr>
+			</tr></table>
+		</div>
+      </article>
+
+
+      <article class='smaller'>
+        <h3>ノードの選択順は任意</h3>
+        <div>
+		  <p>
+		  １回の操作で１つの変数しか変化しないので、ノード更新は例えばテレビ画面のスキャンのように規則的に行ってもよいし、ランダムにノードを選択していってもよい。
+		  </p>
+		  <p align="center">
+			<table border="0"><tr>
+			  <td>左上から順にノードを選択した場合</td>
+			  <td>ランダムにノードを選択した場合</td>
+			  </tr><tr>
+			  <td><img src="images/process-seq.gif" width="100%"></td>
+			  <td><img src="images/process-rand.gif" width="100%"></td>
+			</tr></table>
+		  </p>
+		  <p>↑ 同じ画像（10％ノイズ入り）に対し、１つは左上から規則的に、もう１つはランダムにノードを選択しながら操作を繰り返す様子（２周目まで）をGIFアニメにしてみた</p>
+		</div>
+      </article>
+
+
+      <article class='smaller'>
+        <h3>より高い確率をもつ解を見つける手法</h3>
+        <div>
+		  <p><b>max-productアルゴリズム (see §8.4.5)</b></p>
+		  <p>大域的最大点を必ずしも与えないが、多くの場合ICMよりも良い解を与える。</p>
+		  <p><b>グラフカットアルゴリズム</b></p>
+		  <p>大域的最大解が得られることが保証されている。<br>
+			(Greig <i>et al.</i>, 1989; Boykov <i>et al.</i>, 2001; Kolmogorov and Zabih, 2004)
+		  </p>
+		  <p>石川 博先生の<a href="http://ci.nii.ac.jp/naid/110006250836/">チュートリアル「グラフカット」</a>が分かりやすいので是非見てみて<br>
+			→ <a href="http://ci.nii.ac.jp/naid/110006250836/">http://ci.nii.ac.jp/naid/110006250836/</a>
+			</p>
+		</div>
+      </article>
+
+
+      <article class='smaller'>
+        <h3>グラフカットアルゴリズムを用いたノイズ除去</h3>
+        <div>
+		  <p>マルコフ確率場では無向グラフを用いたが、ここでは有向グラフを用いる。</p>
+		  <ul>
+			<li>各ピクセルに対応するノード w<sub><i>i</i></sub> の他、始点ノード s 、終点ノード t を用意する。</li>
+			<li>隣接するピクセルノード間に双方向に弧を張る。</li>
+			<li>始点ノードから各ピクセルノードへ、各ピクセルノードから終点ノードへ弧（１方向）を張る。</li>
+			<li>それぞれの弧に*適切な容量*を設定した上で、最小カット問題を解く（＝最大フロー問題を解くのと同じ）。
+		  → <a href="http://ja.wikipedia.org/wiki/%E3%82%AB%E3%83%83%E3%83%88_(%E3%82%B0%E3%83%A9%E3%83%95%E7%90%86%E8%AB%96)">カット (グラフ理論) - Wikipedia</a> </li>
+		  </ul>
+		  <p align="center">
+			<img src="images/graphcut1.png">
+		  </p>
+		</div>
+      </article>
+
+
+      <article class='smaller'>
+        <h3>グラフカット版ノイズ除去の実装</h3>
+		<div>
+		  <p><a href="http://projects.skewed.de/graph-tool/">graph-tool</a> (Python) を使ってみた。
+			Boostのグラフライブラリのラッパー的な感じ。</p>
+
+		  <p>（OS XでうまくインストールできなかったのでUbuntuでやりました＞＜）</p>
+
+		  <pre>
+$ python remove_noise_graphcut.py revenge10.png revenge10-gc.png
+</pre>
+		  <p align="center">
+			  <img src="images/revenge10.png" border="1" width="300" align="absmiddle"> →
+			  <img src="images/abcd10.png" border="1" width="300" align="absmiddle">
+		  </p>
+
+		  <p>エネルギー関数を具体的にどう設定したら良いのか分かってなくて、capacityを適当に設定しているのでちゃんと最適解が出ていない可能性が大ですが、とりあえずICM相当の精度は出てます。しかしめちゃ遅です。（320x180の画像で、ローカルのvirtualbox上で50〜55秒）</p>
+
+		  <p>粒々で残ることがないのが特徴ですね。</p>
+		</div>
+      </article>
+
+		  <!--
+		  <p>パラメータの与え方がいまいち分からなくて試行錯誤</p>
+		  -->
+
+	<article class='smaller'>
+      <h3>グラフカット版ノイズ除去の結果（１）</h3>
+		<div>
+		  <table border="0">
+			<tr>
+			  <td><span style='font-size:13pt;'>ノイズ</span></td>
+			  <td><span style='font-size:13pt;'>元画像</span></td>
+			  <td><span style='font-size:13pt;'>ICMによるノイズ除去</span></td>
+			  <td><span style='font-size:13pt;'>グラフカットによるノイズ除去</span></td>
+			</tr><tr>
+			  <td align="right" valign="center">5%</td>
+			  <td align="center"><img src="images/revenge05.png" width="200"></td>
+			  <td align="center"><img src="images/revenge05-res.png" width="200"><br>
+				<font size="2">99.58% / 97.02% / 97.33%</font></td>
+			  <td align="center"><img src="images/abcd05.png" width="200"><br>
+				<font size="2">99.52% / 96.95% / 96.84%</font></td>
+			</tr><tr>
+			  <td align="right" valign="center">10%</td>
+			  <td align="center"><img src="images/revenge10.png" width="200"></td>
+			  <td align="center"><img src="images/revenge10-res.png" width="200"><br>
+				<font size="2">99.13% / 94.35% / 96.31%</font></td>
+			  <td align="center"><img src="images/abcd10.png" width="200"><br>
+				<font size="2">99.25% / 95.74% / 96.71%</font></td>
+			</tr><tr>
+			  <td align="right" valign="center">15%</td>
+			  <td align="center"><img src="images/revenge15.png" width="200"></td>
+			  <td align="center"><img src="images/revenge15-res.png" width="200"><br>
+				<font size="2">98.52% / 90.40% / 95.51%</font></td>
+			  <td align="center"><img src="images/abcd15.png" width="200"><br>
+				<font size="2">98.53% / 88.22% / 96.99%</font></td>
+			</tr>
+		  </table>
+		  <p>画像下の数字は復元率（全体の復元率 / 文字部分の復元率 / 白地部分のノイズ除去率）</p>
+		</div>
+      </article>
+
+	<article class='smaller'>
+      <h3>グラフカット版ノイズ除去の結果（２）</h3>
+		<div>
+		  <table border="0">
+			<tr>
+			  <td><span style='font-size:13pt;'>ノイズ</span></td>
+			  <td><span style='font-size:13pt;'>元画像</span></td>
+			  <td><span style='font-size:13pt;'>ICMによるノイズ除去</span></td>
+			  <td><span style='font-size:13pt;'>グラフカットによるノイズ除去</span></td>
+			</tr><tr>
+			  <td align="right" valign="center">20%</td>
+			  <td align="center"><img src="images/revenge20.png" width="200"></td>
+			  <td align="center"><img src="images/revenge20-res.png" width="200"><br>
+				<font size="2">97.34% / 86.56% / 92.31%</font></td>
+			  <td align="center"><img src="images/abcd20.png" width="200"><br>
+				<font size="2">97.66% / 80.86% / 96.48%</font></td>
+			</tr><tr>
+			  <td align="right" valign="center">25%</td>
+			  <td align="center"><img src="images/revenge25.png" width="200"></td>
+			  <td align="center"><img src="images/revenge25-res.png" width="200"><br>
+				<font size="2">95.05% / 80.06% / 87.59%</font></td>
+			  <td align="center"><img src="images/abcd25.png" width="200"><br>
+				<font size="2">96.61% / 69.90% / 96.27%</font></td>
+			</tr><tr>
+			  <td align="right" valign="center">30%</td>
+			  <td align="center"><img src="images/revenge30.png" width="200"></td>
+			  <td align="center"><img src="images/revenge30-res.png" width="200"><br>
+				<font size="2">91.55% / 71.61% / 80.75%</font></td>
+			  <td align="center"><img src="images/abcd30.png" width="200"><br>
+				<font size="2">95.22% / 54.27% / 95.93%</font></td>
+			</tr>
+		  </table>
+		  <p>画像下の数字は復元率（全体の復元率 / 文字部分の復元率 / 白地部分のノイズ除去率）</p>
+		</div>
+      </article>
+
+
+	<article class='smaller'>
+      <!--<h3>グラフカット版ノイズ除去の実装</h3>-->
+		<div>
+		  <table border="0">
+			<tr>
+			  <td><span style='font-size:13pt;'>ノイズ(%)</span></td>
+			  <td><span style='font-size:13pt;'>ノイズ入り元画像</span></td>
+			  <td><span style='font-size:13pt;'>ICMによるノイズ除去</span></td>
+			  <td><span style='font-size:13pt;'>グラフカットによるノイズ除去</span></td>
+			</tr><tr>
+			  <td align="right" valign="center">5%</td>
+			  <td align="center"><img src="images/revenge05.png" width="200"></td>
+			  <td align="center"><img src="images/revenge05-res.png" width="200"></td>
+			  <td align="center"><img src="images/abcd05.png" width="200"></td>
+			</tr><tr>
+			  <td align="right" valign="center">10%</td>
+			  <td align="center"><img src="images/revenge10.png" width="200"></td>
+			  <td align="center"><img src="images/revenge10-res.png" width="200"></td>
+			  <td align="center"><img src="images/abcd10.png" width="200"></td>
+			</tr><tr>
+			  <td align="right" valign="center">15%</td>
+			  <td align="center"><img src="images/revenge15.png" width="200"></td>
+			  <td align="center"><img src="images/revenge15-res.png" width="200"></td>
+			  <td align="center"><img src="images/abcd15.png" width="200"></td>
+			</tr><tr>
+			  <td align="right" valign="center">20%</td>
+			  <td align="center"><img src="images/revenge20.png" width="200"></td>
+			  <td align="center"><img src="images/revenge20-res.png" width="200"></td>
+			  <td align="center"><img src="images/abcd20.png" width="200"></td>
+			</tr>
+		  </table>
+		</div>
+      </article>
+
+
+      <article class='smaller'>
+        <h3>References</h3>
+        <ul>
+		  <li>発表資料<br>
+			<a href="http://naoyat.github.com/slides/prml/8.3.3/slide.html">http://naoyat.github.com/slides/prml/8.3.3/slide.html</a></li>
+		  <li>実装コード (Octave) + サンプルデータ<br>
+			<a href="https://github.com/naoyat/slides/tree/master/prml/8.3.3">https://github.com/naoyat/slides/tree/master/prml/8.3.3</a></li>
+          <li>naoya_t@hatenablog<br>
+			<a href="http://naoyat.hatenablog.jp/">http://naoyat.hatenablog.jp/</a></li>
+		  <li>Google HTML5 slide template<br>
+			<a href="http://code.google.com/p/html5slides/">http://code.google.com/p/html5slides/</a></li>
+        </ul>
+      </article>
+
+    </section>
+
+  </body>
+</html>
+
